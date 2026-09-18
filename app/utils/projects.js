@@ -1,8 +1,18 @@
 export const projects = [
   {
+    title: 'ZWO Builder',
+    description:
+      'A Zwift workout editor I built because clicking intervals together in-game is slow. Drag blocks around, describe a change in plain English, export a .zwo. Workouts stay on the the browser in IndexedDB.',
+    live_url: 'https://zwo-builder.pages.dev/',
+    github_repo: 'https://github.com/MaysenTG/zwift-workout-creator',
+    image_url: '/assets/images/zwift-workout-builder.png',
+    skills: 'React, TypeScript, Cloudflare, OpenAI',
+    featured: true,
+  },
+  {
     title: 'URL shortener',
     description:
-      'Superfast URL shortener built with Ruby on Rails. It also uses webhooks to update link clicks each time the link is clicked.',
+      'Rails redirect service with webhook-backed click counts. The interesting bit was keeping the hop itself cheap.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/url_shortener',
     image_url: '/assets/images/url-shortener.webp',
@@ -10,8 +20,7 @@ export const projects = [
   },
   {
     title: 'Online store',
-    description:
-      'Ruby on Rails online store. Featuring a full Admin backend dashboard for viewing products, categories, orders, etc. Checkout is integrated with Stripe for a full workflow',
+    description: 'Rails shop with an admin area for products, categories, and orders. Checkout runs through Stripe.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/RoR-online_store',
     image_url: '/assets/images/online-store.webp',
@@ -20,11 +29,11 @@ export const projects = [
   {
     title: 'Static site generator',
     description:
-      'Static site generator using Google cloud storage. Files, images, and other assets are uploaded to Google Cloud Storage and the site is immediately updated.',
+      'Drop files into Google Cloud Storage and the published site updates. Content changes skip a full redeploy.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/ror-gcs-site-creator',
     image_url: '/assets/images/static-site-generator.webp',
-    skills: 'Ruby on Rails, Hotwire/StimulusJS, Google Cloud Storage',
+    skills: 'Ruby on Rails, Hotwire, Google Cloud Storage',
   },
   {
     title: 'Link in bio',
@@ -36,9 +45,9 @@ export const projects = [
     skills: 'Ruby on Rails, Hotwire/StimulusJS, Cloudflare R2 asset storage',
   },
   {
-    title: 'EmberJS portfolio site',
+    title: 'This site',
     description:
-      'Personal portfolio site built using EmberJS. The site is responsive and uses the Ember CLI to build the site.',
+      'Personal site in Ember. The project list is a JS file on purpose — adding something new should not involve a CMS.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/ember-portfolio',
     image_url: '/assets/images/ember-portfolio.png',
@@ -47,7 +56,7 @@ export const projects = [
   {
     title: 'Fake API',
     description:
-      'Fake API built with Sinatra (Ruby). It uses the Sinatra framework to create a fake API for testing purposes. It uses the OpenAI API to generate and cache API responses, allowing limitless API endpoints.',
+      'Sinatra app that stands up REST endpoints for testing. OpenAI fills in the responses, then they get cached so you are not paying for the same fake payload twice.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/fake-api',
     image_url: '/assets/images/fake-api.png',

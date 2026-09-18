@@ -1,12 +1,9 @@
 <section class="section" id="projects">
   <div class="container">
-    <div class="text-center mb-2">
-      <span class="section-label">Portfolio</span>
-      <h2 class="section-title">Selected builds</h2>
-      <p class="section-lead mx-auto">
-        A mix of product, infrastructure, and data-driven work.
-      </p>
-    </div>
+    <h2 class="section-title">Projects</h2>
+    <p class="section-lead">
+      A few things I’ve shipped. The Zwift Workout Builder is my latest project.
+    </p>
     <ul class="project__list">
       {{#each this.projects as |project|}}
         <Sections::Projects::ProjectCard @project={{project}} />

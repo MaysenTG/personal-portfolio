@@ -1,28 +1,35 @@
 import Component from '@glimmer/component'
-import { action, setProperties } from '@ember/object'
+import { action } from '@ember/object'
 import { tracked } from '@glimmer/tracking'
-import Swal from 'sweetalert2'
 import ENV from 'ember-portfolio/config/environment'
 
 export default class ContactComponent extends Component {
   @tracked sending = false
+  @tracked sent = false
+  @tracked submitError = false
   @tracked email = ''
   @tracked name = ''
   @tracked message = ''
 
   get isFormValid() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(this.email) && this.email && this.name && this.message
+    return emailRegex.test(this.email.trim()) && this.name.trim() && this.message.trim()
+  }
+
+  get cannotSubmit() {
+    return !this.isFormValid || this.sending
   }
 
   @action
-  async submitForm() {
-    if (!this.isFormValid) return
+  async submitForm(event) {
+    event.preventDefault()
+    if (this.cannotSubmit) return
 
     this.sending = true
+    this.submitError = false
 
     try {
-      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,27 +37,20 @@ export default class ContactComponent extends Component {
         body: JSON.stringify(this.emailBody()),
       })
 
-      Swal.fire({
-        title: 'Form submitted!',
-        text: 'Thank you for reaching out. I will get back to you as soon as possible.',
-        icon: 'success',
-      })
+      if (!response.ok) {
+        throw new Error(`EmailJS responded with ${response.status}`)
+      }
+
+      this.sent = true
+      this.email = ''
+      this.name = ''
+      this.message = ''
     } catch (error) {
-      console.log(error)
-
-      Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred while submitting the form. Please try again later.',
-        icon: 'error',
-      })
+      console.error(error)
+      this.submitError = true
+    } finally {
+      this.sending = false
     }
-
-    setProperties(this, {
-      email: '',
-      name: '',
-      message: '',
-      sending: false,
-    })
   }
 
   emailBody() {

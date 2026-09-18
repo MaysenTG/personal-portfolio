@@ -2,15 +2,12 @@
   <div class="container">
     <div class="row g-5 align-items-start">
       <div class="col-lg-5">
-        <span class="section-label">Contact</span>
-        <h2 class="section-title">Get in touch</h2>
+        <h2 class="section-title">Contact</h2>
         <p class="section-lead contact__info">
-          Interested in working together? Send me a message or reach out directly.
+          If you want to get in touch, email is the best way to reach me.
         </p>
         <p class="contact__info">
-          <a href="mailto:greenwood.maysen@gmail.com">
-            <i class="bi bi-envelope me-2"></i>greenwood.maysen@gmail.com
-          </a>
+          <a href="mailto:greenwood.maysen@gmail.com">greenwood.maysen@gmail.com</a>
         </p>
       </div>
       <div class="col-lg-7">
@@ -73,8 +70,17 @@
                   {{/if}}
                 </button>
               {{/if}}
-            </div>
-          </form>
+              <div>
+                <button
+                  disabled={{this.cannotSubmit}}
+                  type="submit"
+                  class="btn btn-primary d-block w-100"
+                >
+                  {{if this.sending "Sending…" "Send"}}
+                </button>
+              </div>
+            </form>
+          {{/if}}
         </div>
       </div>
     </div>

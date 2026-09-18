@@ -1,19 +1,11 @@
 <section class="section section--alt" id="skills" data-test-skills-section>
   <div class="container">
-    <div class="text-center mb-4">
-      <span class="section-label">Strengths</span>
-      <h2 class="section-title">What I bring to a team</h2>
-      <p class="section-lead mx-auto">
-        I focus on the things that compound: understanding systems deeply, building collaboratively, and shipping work that holds up.
-      </p>
-    </div>
+    <h2 class="section-title">My tech stack</h2>
 
     <div class="skills-showcase">
       {{#each this.skillGroups as |group|}}
         <article class="skills-card">
-          <div class="skills-card__icon" aria-hidden="true">{{group.icon}}</div>
           <h3 class="skills-card__title">{{group.title}}</h3>
-          <p class="skills-card__summary">{{group.summary}}</p>
           <ul class="skills-card__list">
             {{#each group.items as |item|}}
               <li>{{item}}</li>

@@ -3,22 +3,34 @@
     <a class="navbar-brand d-flex align-items-center" href="/">
       <span>Maysen Greenwood</span>
     </a>
-    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-5">
-      <span class="visually-hidden">Toggle navigation</span>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-5" aria-controls="navcol-5" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navcol-5" class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto justify-content-evenly flex-row">
         <li class="nav-item">
-          <a class="nav-link show-on-scroll" href="#about" onclick="updateActiveNavLink('about')">About me</a>
+          <a
+            class="nav-link {{this.aboutActive}}"
+            href="#about"
+            {{on "click" this.closeNav}}
+          >About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link show-on-scroll" href="#projects" onclick="updateActiveNavLink('projects')">My projects</a>
+          <a
+            class="nav-link {{this.projectsActive}}"
+            href="#projects"
+            {{on "click" this.closeNav}}
+          >Projects</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link show-on-scroll" href="#contact-me" onclick="updateActiveNavLink('contact-me')">Contact me</a></li>
+          <a
+            class="nav-link {{this.contactActive}}"
+            href="#contact-me"
+            {{on "click" this.closeNav}}
+          >Contact</a>
+        </li>
         <li class="nav-item">
-          <a target="_blank" rel="noreferrer noopener" class="nav-link" href="https://github.com/MaysenTG">
+          <a target="_blank" rel="noreferrer noopener" class="nav-link" href="https://github.com/MaysenTG" aria-label="GitHub">
             <i class="bi-github"></i>
           </a>
         </li>
@@ -28,6 +40,7 @@
             rel="noreferrer noopener"
             class="nav-link"
             href="https://www.linkedin.com/in/maysen-greenwood/"
+            aria-label="LinkedIn"
           >
             <i class="bi-linkedin"></i>
           </a>

@@ -1,7 +1,7 @@
-<li class="project">
+<li class="project {{if this.project.featured 'project--featured'}}">
   <article class="project__card">
     <div class="project__image-wrapper">
-      <img src={{this.project.image_url}} class="project__img" alt={{this.project.title}} />
+      <img src={{this.project.image_url}} class="project__img" alt="" />
     </div>
     <div class="project__content">
       <div class="project__content-main">
@@ -14,18 +14,28 @@
         <p class="project__description">{{this.project.description}}</p>
       </div>
       <div class="project__links">
-        <a
-          href={{this.project.github_repo}}
-          rel="noopener noreferrer"
-          target="_blank"
-          class="project__link"
-          title="View on GitHub"
-        >
-          <img alt="github icon" src="/assets/images/github-logo-black.png" height="24px" width="24px" class="icon" />
-        </a>
+        {{#if this.project.github_repo}}
+          <a
+            href={{this.project.github_repo}}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="project__link"
+            title="View on GitHub"
+          >
+            <img alt="" src="/assets/images/github-logo-white.png" height="24" width="24" class="icon" />
+            <span class="visually-hidden">GitHub: {{this.project.title}}</span>
+          </a>
+        {{/if}}
         {{#if this.project.live_url}}
-          <a href={{this.project.live_url}} rel="noopener noreferrer" target="_blank" class="project__link" title="View live">
-            <img alt="web preview icon" src="assets/images/earth-white.png" height="24px" width="24px" class="icon" />
+          <a
+            href={{this.project.live_url}}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="project__link"
+            title="Open live site"
+          >
+            <img alt="" src="/assets/images/earth-white.png" height="24" width="24" class="icon" />
+            <span class="visually-hidden">Live site: {{this.project.title}}</span>
           </a>
         {{/if}}
       </div>
