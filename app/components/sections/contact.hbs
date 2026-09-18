@@ -4,7 +4,7 @@
       <div class="col-lg-5">
         <h2 class="section-title">Contact</h2>
         <p class="section-lead contact__info">
-          If you want to get in touch, email is the best way to reach me.
+          If you want to talk about a role, a bug, or a ride, email is the most reliable way to reach me.
         </p>
         <p class="contact__info">
           <a href="mailto:greenwood.maysen@gmail.com">greenwood.maysen@gmail.com</a>
@@ -12,71 +12,61 @@
       </div>
       <div class="col-lg-7">
         <div class="contact__form-card">
-          <form id="contact-form">
-            <div class="mb-3">
-              <Input
-                @type="text"
-                @value={{this.name}}
-                data-display-name="name"
-                data-test-input="name"
-                id="name"
-                class="form-control"
-                name="user_name"
-                placeholder="Your name"
-              />
-            </div>
-            <div class="mb-3">
-              <Input
-                @type="email"
-                @value={{this.email}}
-                data-display-name="email"
-                data-test-input="email"
-                id="email"
-                class="form-control"
-                name="email"
-                placeholder="Your email"
-              />
-            </div>
-            <div class="mb-4">
-              <Textarea
-                @value={{this.message}}
-                data-display-name="message"
-                data-test-input="message"
-                id="message"
-                rows="5"
-                class="form-control"
-                name="message"
-                placeholder="Your message"
-              />
-            </div>
-            <div>
-              {{#if this.sending}}
-                <button class="d-block w-100 btn btn-primary hidden" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  Sending...
-                </button>
-              {{else}}
-                <button
-                  disabled={{if this.isFormValid false true}}
-                  type="button"
-                  class="btn btn-primary d-block w-100"
-                  data-test-action="submit-form"
-                  {{on "click" this.submitForm}}
-                >
-                  {{#if this.isFormValid}}
-                    Send message
-                  {{else}}
-                    Please fill out all fields
-                  {{/if}}
-                </button>
+          {{#if this.sent}}
+            <p class="contact__status">Got it. I’ll reply when I can.</p>
+          {{else}}
+            <form id="contact-form" {{on "submit" this.submitForm}}>
+              <div class="mb-3">
+                <label class="form-label" for="name">Name</label>
+                <Input
+                  @type="text"
+                  @value={{this.name}}
+                  data-display-name="name"
+                  data-test-input="name"
+                  id="name"
+                  class="form-control"
+                  name="user_name"
+                  autocomplete="name"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="email">Email</label>
+                <Input
+                  @type="email"
+                  @value={{this.email}}
+                  data-display-name="email"
+                  data-test-input="email"
+                  id="email"
+                  class="form-control"
+                  name="email"
+                  autocomplete="email"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="form-label" for="message">Message</label>
+                <Textarea
+                  @value={{this.message}}
+                  data-display-name="message"
+                  data-test-input="message"
+                  id="message"
+                  rows="5"
+                  class="form-control"
+                  name="message"
+                />
+              </div>
+              {{#if this.submitError}}
+                <p class="contact__status contact__status--error">
+                  That didn’t send. Try again, or just use the email on the left.
+                </p>
               {{/if}}
               <div>
                 <button
                   disabled={{this.cannotSubmit}}
                   type="submit"
                   class="btn btn-primary d-block w-100"
+                  data-test-action="submit-form"
                 >
-                  {{if this.sending "Sending…" "Send"}}
+                  {{if this.sending "Sending…" "Send message"}}
                 </button>
               </div>
             </form>

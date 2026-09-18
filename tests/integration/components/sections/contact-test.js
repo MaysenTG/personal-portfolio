@@ -22,9 +22,10 @@ module('Integration | Component | sections/contact', function (hooks) {
         fetchCalls.push(args)
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({
-            text: 'Email sent successfully',
-          }),
+          json: () =>
+            Promise.resolve({
+              text: 'Email sent successfully',
+            }),
         })
       }
     })
@@ -39,26 +40,12 @@ module('Integration | Component | sections/contact', function (hooks) {
     })
 
     test('submits the form to the emailjs API', async function (assert) {
-      assert.expect(4)
-
       await click('[data-test-action="submit-form"]')
 
       assert.strictEqual(fetchCalls.length, 1, 'fetch called once')
-      assert.deepEqual(
-        fetchCalls[0][0],
-        'https://api.emailjs.com/api/v1.0/email/send',
-        'correct URL passed to fetch'
-      )
-      assert.strictEqual(
-        fetchCalls[0][1].method,
-        'POST',
-        'method is POST'
-      )
-      assert.deepEqual(
-        fetchCalls[0][1].headers,
-        { 'Content-Type': 'application/json' },
-        'headers are correct'
-      )
+      assert.deepEqual(fetchCalls[0][0], 'https://api.emailjs.com/api/v1.0/email/send', 'correct URL passed to fetch')
+      assert.strictEqual(fetchCalls[0][1].method, 'POST', 'method is POST')
+      assert.deepEqual(fetchCalls[0][1].headers, { 'Content-Type': 'application/json' }, 'headers are correct')
     })
   })
 
