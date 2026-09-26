@@ -29,7 +29,7 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/assets/images/github-logo-white.png',
+            src: '/assets/images/pwa-icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any',
@@ -49,9 +49,9 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.startsWith('/assets/images/'),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'project-images',
+              cacheName: 'images',
               expiration: {
-                maxEntries: 32,
+                maxEntries: 64,
                 maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {

@@ -1,5 +1,7 @@
 ---
+import ResponsivePicture from './ResponsivePicture.astro'
 import type { Project } from '../data/projects'
+import { projectImageWidths } from '../data/projects'
 
 interface Props {
   project: Project
@@ -13,12 +15,19 @@ const featuredClass = project.featured ? 'project--featured' : ''
 <li class={`project ${featuredClass}`}>
   <article class="project__card">
     <div class="project__image-wrapper">
-      <img
-        src={project.image_url}
-        class="project__img"
+      <ResponsivePicture
+        name={project.image}
+        widths={[...projectImageWidths]}
+        sizes={
+          project.featured
+            ? '(min-width: 900px) 55vw, 100vw'
+            : '(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw'
+        }
+        width={project.imageWidth}
+        height={project.imageHeight}
         alt=""
+        class="project__img"
         loading={project.featured ? 'eager' : 'lazy'}
-        decoding="async"
       />
     </div>
     <div class="project__content">
