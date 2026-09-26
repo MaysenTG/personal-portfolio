@@ -60,20 +60,6 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/pub-47aa65e55f4d4568bef28000980da8af\.r2\.dev\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'hero-r2',
-              expiration: {
-                maxEntries: 8,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
             urlPattern: ({ request }) => request.mode === 'navigate',
             handler: 'CacheFirst',
             options: {

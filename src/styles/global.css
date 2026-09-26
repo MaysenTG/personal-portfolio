@@ -207,7 +207,7 @@ img {
       rgba(18, 21, 28, 0.82) 70%,
       rgba(18, 21, 28, 0.94) 100%
     ),
-    url('https://pub-47aa65e55f4d4568bef28000980da8af.r2.dev/Maysen-portfolio-website-hero-image.webp');
+    url('/assets/images/hero-image.webp');
   background-size: cover;
   background-position: center;
   padding: 8rem 0 4.5rem;
