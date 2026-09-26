@@ -5,7 +5,6 @@ Static personal site rebuilt in **Astro** for near-zero JS and sub-100ms repeat 
 ## Why Astro
 
 - Ships HTML/CSS by default; JS only for nav + contact form
-- Self-hosted Source Serif / Source Sans (no Google Fonts round-trip)
 - Workbox PWA: CacheFirst for pages, hashed assets, and the hero image
 - Cloudflare `_headers` for immutable long-cache on `/_astro/*` and `/assets/*`
 
