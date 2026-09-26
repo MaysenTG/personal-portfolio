@@ -1,0 +1,80 @@
+---
+import type { Project } from '../data/projects'
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+const skills = project.skills.split(',').map((s) => s.trim()).filter(Boolean)
+const featuredClass = project.featured ? 'project--featured' : ''
+---
+
+<li class={`project ${featuredClass}`}>
+  <article class="project__card">
+    <div class="project__image-wrapper">
+      <img
+        src={project.image_url}
+        class="project__img"
+        alt=""
+        loading={project.featured ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </div>
+    <div class="project__content">
+      <div class="project__content-main">
+        <h3 class="project__title">{project.title}</h3>
+        <div class="project__skills-list">
+          {skills.map((skill) => <span class="project__skill-tag">{skill}</span>)}
+        </div>
+        <p class="project__description">{project.description}</p>
+      </div>
+      <div class="project__links">
+        {
+          project.github_repo && (
+            <a
+              href={project.github_repo}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="project__link"
+              title="View on GitHub"
+            >
+              <img
+                alt=""
+                src="/assets/images/github-logo-white.png"
+                height="18"
+                width="18"
+                class="icon"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="visually-hidden">GitHub: {project.title}</span>
+            </a>
+          )
+        }
+        {
+          project.live_url && (
+            <a
+              href={project.live_url}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="project__link"
+              title="Open live site"
+            >
+              <img
+                alt=""
+                src="/assets/images/earth-white.png"
+                height="18"
+                width="18"
+                class="icon"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="visually-hidden">Live site: {project.title}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </article>
+</li>

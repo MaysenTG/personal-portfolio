@@ -1,0 +1,68 @@
+---
+import { pwaInfo } from 'virtual:pwa-info'
+import '@fontsource/source-serif-4/latin-600.css'
+import '@fontsource/source-sans-3/latin-400.css'
+import '@fontsource/source-sans-3/latin-500.css'
+import '@fontsource/source-sans-3/latin-600.css'
+import '@fontsource/source-sans-3/latin-700.css'
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+  description?: string
+}
+
+const {
+  title = 'Maysen Greenwood',
+  description = 'Software developer in New Zealand. Rails and C# at Henry Schein One, plus side projects like a Zwift workout builder.',
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Maysen Greenwood" />
+    <link rel="canonical" href="https://maysengreenwood.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta
+      property="og:description"
+      content="Software developer in New Zealand. Rails, C#, and a few things built for myself."
+    />
+    <meta property="og:url" content="https://maysengreenwood.com/" />
+    <meta property="og:site_name" content="Maysen Greenwood" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta
+      name="twitter:description"
+      content="Software developer in New Zealand. Rails, C#, and a few things built for myself."
+    />
+
+    <link
+      rel="preload"
+      as="image"
+      href="https://pub-47aa65e55f4d4568bef28000980da8af.r2.dev/Maysen-portfolio-website-hero-image.webp"
+      fetchpriority="high"
+    />
+
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+  </head>
+  <body>
+    <slot />
+    <script>
+      import { registerSW } from 'virtual:pwa-register'
+      registerSW({ immediate: true })
+    </script>
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "b934bb0421c247709fbc6e5954a704db"}'
+      defer></script>
+  </body>
+</html>

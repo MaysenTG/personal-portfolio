@@ -1,56 +1,46 @@
-# ember-portfolio
+# Maysen Greenwood — Portfolio
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+Static personal site rebuilt in **Astro** for near-zero JS and sub-100ms repeat loads via an aggressive cache-first service worker.
+
+## Why Astro
+
+- Ships HTML/CSS by default; JS only for nav + contact form
+- Self-hosted Source Serif / Source Sans (no Google Fonts round-trip)
+- Workbox PWA: CacheFirst for pages, hashed assets, and the hero image
+- Cloudflare `_headers` for immutable long-cache on `/_astro/*` and `/assets/*`
 
 ## Prerequisites
 
-You will need the following things properly installed on your computer.
+- Node.js **22.12+** (Astro 7 minimum; **Node 26** recommended — see `.nvmrc`)
+- npm 9.6.5+
 
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) (with npm)
-- [Ember CLI](https://cli.emberjs.com/release/)
-- [Google Chrome](https://google.com/chrome/)
+## Setup
 
-## Installation
+```bash
+npm install
+npm run dev
+```
 
-- `git clone <repository-url>` this repository
-- `cd ember-portfolio`
-- `npm install`
+Visit http://localhost:4321
 
-## Running / Development
+## Production
 
-- `npm run start`
-- Visit your app at [http://localhost:4200](http://localhost:4200).
-- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+```bash
+npm run build
+npm run preview
+```
 
-### Code Generators
+Deploy the `dist/` folder (Cloudflare Pages, Netlify, or any static host). `_headers` is picked up automatically on Cloudflare Pages.
 
-Make use of the many generators for code, try `ember help generate` for more details
+## Stack
 
-### Running Tests
+| Package | Notes |
+|---------|--------|
+| Astro **7.3.5** | Rust compiler, Vite 8 / Rolldown, queued rendering |
+| TypeScript **7** | Native compiler (faster `tsc`). Astro’s `astro check` / language-server still need TS 6 if you add them later |
+| vite-plugin-pwa + `@vite-pwa/astro` | Cache-first SW (`@vite-pwa/astro` peers Astro ≤5; override allows Astro 7) |
 
-- `npm run test`
-- `npm run test:ember -- --server`
+## Content
 
-### Linting
-
-- `npm run lint`
-- `npm run lint:fix`
-
-### Building
-
-- `npm exec ember build` (development)
-- `npm run build` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-- [ember.js](https://emberjs.com/)
-- [ember-cli](https://cli.emberjs.com/release/)
-- Development Browser Extensions
-  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+- Projects: `src/data/projects.ts`
+- Skills / EmailJS: `src/data/site.ts`

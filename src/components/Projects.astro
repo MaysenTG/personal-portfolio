@@ -1,0 +1,16 @@
+---
+import { projects } from '../data/projects'
+import ProjectCard from './ProjectCard.astro'
+---
+
+<section class="section" id="projects">
+  <div class="container">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-lead">
+      A few things I’ve shipped. The Zwift Workout Builder is my latest project.
+    </p>
+    <ul class="project__list">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </ul>
+  </div>
+</section>
