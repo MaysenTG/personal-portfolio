@@ -9,6 +9,7 @@ const outDir = path.join(root, 'public/assets/images')
 /** @type {Record<string, { widths: number[]; quality?: number }>} */
 const jobs = {
   'hero-image.webp': { widths: [640, 960, 1280, 1600], quality: 78 },
+  'markdown-website-builder.png': { widths: [400, 800, 1200], quality: 75 },
   'zwift-workout-builder.png': { widths: [400, 800, 1200], quality: 75 },
   'url-shortener.webp': { widths: [400, 800, 1200], quality: 75 },
   'online-store.webp': { widths: [400, 800, 1200], quality: 75 },
