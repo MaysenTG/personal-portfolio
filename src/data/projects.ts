@@ -13,6 +13,18 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    title: 'Markdown website builder',
+    description:
+      'Frontend pages from markdown, YAML frontmatter, and a bit of CSS, compressed into the URL. Share a link and the page renders — no accounts, no backend. The editor shows a live preview, and optional AI edits for an element or the whole page go through a Cloudflare Worker so the OpenAI key never reaches the browser.',
+    live_url: 'https://markdown-website-builder.pages.dev/',
+    github_repo: 'https://github.com/MaysenTG/markdown-website-builder',
+    image: 'markdown-website-builder',
+    imageWidth: 1920,
+    imageHeight: 980,
+    skills: 'React, TypeScript, Cloudflare, OpenAI',
+    featured: true,
+  },
+  {
     title: 'ZWO Builder',
     description:
       'A Zwift workout editor I built because clicking intervals together in-game is slow. Drag blocks around, describe a change in plain English, export a .zwo. Workouts stay on the the browser in IndexedDB.',
