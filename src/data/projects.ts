@@ -43,20 +43,9 @@ export const projects: Project[] = [
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/url_shortener',
     image: 'url-shortener',
-    imageWidth: 2880,
-    imageHeight: 1278,
+    imageWidth: 1917,
+    imageHeight: 877,
     skills: 'Ruby on Rails',
-  },
-  {
-    title: 'Online store',
-    description:
-      'Rails shop with an admin area for products, categories, and orders. Checkout runs through Stripe.',
-    live_url: '',
-    github_repo: 'https://github.com/MaysenTG/RoR-online_store',
-    image: 'online-store',
-    imageWidth: 2880,
-    imageHeight: 1418,
-    skills: 'Ruby on Rails, Stripe',
   },
   {
     title: 'Static site generator',
