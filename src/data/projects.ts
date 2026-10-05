@@ -48,15 +48,15 @@ export const projects: Project[] = [
     skills: 'Ruby on Rails',
   },
   {
-    title: 'Static site generator',
+    title: 'Static site creator',
     description:
-      'Drop files into Google Cloud Storage and the published site updates. Content changes skip a full redeploy.',
-    live_url: '',
+      'Rails app to create and host static sites. Edit the files in the browser, publish under /s/:name, and the assets live on Cloudflare R2.',
+    live_url: 'https://static-site-creator.fly.dev',
     github_repo: 'https://github.com/MaysenTG/ror-gcs-site-creator',
     image: 'static-site-generator',
-    imageWidth: 2880,
-    imageHeight: 1406,
-    skills: 'Ruby on Rails, Hotwire, Google Cloud Storage',
+    imageWidth: 1280,
+    imageHeight: 800,
+    skills: 'Ruby on Rails, Hotwire, Cloudflare R2',
   },
   {
     title: 'Link in bio',

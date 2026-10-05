@@ -37,8 +37,8 @@
     ]
   },
   "static-site-generator": {
-    "width": 2880,
-    "height": 1406,
+    "width": 1280,
+    "height": 800,
     "widths": [
       400,
       800,
