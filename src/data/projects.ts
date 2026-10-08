@@ -62,7 +62,7 @@ export const projects: Project[] = [
     title: 'Link in bio',
     description:
       'Link in bio app with an editable bio page. The app uses Hotwire/StimulusJS to update the bio page in real time. Links are orderable to prioritize the most important links.',
-    live_url: 'https://linkinbio.fly.dev/',
+    live_url: '',
     github_repo: 'https://github.com/MaysenTG/RoR-link_in_bio',
     image: 'linkinbio',
     imageWidth: 3024,
