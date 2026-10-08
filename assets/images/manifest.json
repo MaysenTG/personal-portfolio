@@ -1,0 +1,75 @@
+{
+  "hero-image": {
+    "width": 1600,
+    "height": 900,
+    "widths": [
+      640,
+      960,
+      1280,
+      1600
+    ]
+  },
+  "markdown-website-builder": {
+    "width": 1920,
+    "height": 980,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "zwift-workout-builder": {
+    "width": 1919,
+    "height": 875,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "url-shortener": {
+    "width": 1917,
+    "height": 877,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "static-site-generator": {
+    "width": 1280,
+    "height": 800,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "linkinbio": {
+    "width": 3024,
+    "height": 1540,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "personal-portfolio": {
+    "width": 1919,
+    "height": 854,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "fake-api": {
+    "width": 3018,
+    "height": 1524,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  }
+}
