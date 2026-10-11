@@ -92,6 +92,17 @@ export const projects: Project[] = [
     skills:
       'Sinatra (Ruby), RESTful APIs, JSON formatted responses from OpenAI, agressive caching',
   },
+  {
+    title: 'Planedle',
+    description:
+      'A daily guess-the-aircraft game. You see a zoomed-in photo of a plane and each wrong guess zooms out, over six tries. Photos load from Wikimedia Commons.',
+    live_url: 'https://maysentg.github.io/planedle/',
+    github_repo: 'https://github.com/MaysenTG/planedle',
+    image: 'planedle',
+    imageWidth: 1280,
+    imageHeight: 800,
+    skills: 'JavaScript, Vite, HTML, CSS',
+  },
 ]
 
 export const projectImageWidths = [400, 800, 1200] as const
