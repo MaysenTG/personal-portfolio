@@ -13,15 +13,15 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: 'Markdown website builder',
+    title: 'Static site creator',
     description:
-      'Frontend pages from markdown, YAML frontmatter, and a bit of CSS, compressed into the URL. Share a link and the page renders — no accounts, no backend. The editor shows a live preview, and optional AI edits for an element or the whole page go through a Cloudflare Worker so the OpenAI key never reaches the browser.',
-    live_url: 'https://markdown-website-builder.pages.dev/',
-    github_repo: 'https://github.com/MaysenTG/markdown-website-builder',
-    image: 'markdown-website-builder',
-    imageWidth: 1920,
-    imageHeight: 980,
-    skills: 'React, TypeScript, Cloudflare, OpenAI',
+      'Rails app to create and host static sites. Edit the files in the browser, publish under /s/:name, and the assets live on Cloudflare R2.',
+    live_url: 'https://static-site-creator.fly.dev',
+    github_repo: 'https://github.com/MaysenTG/ror-gcs-site-creator',
+    image: 'static-site-generator',
+    imageWidth: 1280,
+    imageHeight: 800,
+    skills: 'Ruby on Rails, Hotwire, Cloudflare R2',
     featured: true,
   },
   {
@@ -37,6 +37,17 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    title: 'Markdown website builder',
+    description:
+      'Frontend pages from markdown, YAML frontmatter, and a bit of CSS, compressed into the URL. Share a link and the page renders — no accounts, no backend. The editor shows a live preview, and optional AI edits for an element or the whole page go through a Cloudflare Worker so the OpenAI key never reaches the browser.',
+    live_url: 'https://markdown-website-builder.pages.dev/',
+    github_repo: 'https://github.com/MaysenTG/markdown-website-builder',
+    image: 'markdown-website-builder',
+    imageWidth: 1920,
+    imageHeight: 980,
+    skills: 'React, TypeScript, Cloudflare, OpenAI',
+  },
+  {
     title: 'URL shortener',
     description:
       'Rails redirect service with webhook-backed click counts. The interesting bit was keeping the hop itself cheap.',
@@ -46,17 +57,6 @@ export const projects: Project[] = [
     imageWidth: 1917,
     imageHeight: 877,
     skills: 'Ruby on Rails',
-  },
-  {
-    title: 'Static site creator',
-    description:
-      'Rails app to create and host static sites. Edit the files in the browser, publish under /s/:name, and the assets live on Cloudflare R2.',
-    live_url: 'https://static-site-creator.fly.dev',
-    github_repo: 'https://github.com/MaysenTG/ror-gcs-site-creator',
-    image: 'static-site-generator',
-    imageWidth: 1280,
-    imageHeight: 800,
-    skills: 'Ruby on Rails, Hotwire, Cloudflare R2',
   },
   {
     title: 'Link in bio',
