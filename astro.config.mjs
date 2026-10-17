@@ -47,12 +47,13 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/assets/images/'),
-            handler: 'CacheFirst',
+            // Revalidate in the background so a new deploy is picked up on the next visit
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'images',
               expiration: {
                 maxEntries: 64,
-                maxAgeSeconds: 60 * 60 * 24 * 365,
+                maxAgeSeconds: 60 * 60 * 24,
               },
               cacheableResponse: {
                 statuses: [0, 200],
