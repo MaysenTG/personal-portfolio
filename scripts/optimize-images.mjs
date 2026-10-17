@@ -12,10 +12,11 @@ const jobs = {
   'markdown-website-builder.png': { widths: [400, 800, 1200], quality: 75 },
   'zwift-workout-builder.png': { widths: [400, 800, 1200], quality: 75 },
   'url-shortener.png': { widths: [400, 800, 1200], quality: 75 },
-  'static-site-generator.webp': { widths: [400, 800, 1200], quality: 75 },
-  'linkinbio.webp': { widths: [400, 800, 1200], quality: 75 },
+  'static-site-generator.png': { widths: [400, 800, 1200], quality: 75 },
+  'linkinbio.png': { widths: [400, 800, 1200], quality: 75 },
   'personal-portfolio.webp': { widths: [400, 800, 1200], quality: 75 },
   'fake-api.webp': { widths: [400, 800, 1200], quality: 75 },
+  'planedle.png': { widths: [400, 800, 1200], quality: 75 },
 }
 
 await mkdir(outDir, { recursive: true })

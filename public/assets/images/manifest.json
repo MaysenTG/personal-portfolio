@@ -28,8 +28,8 @@
     ]
   },
   "url-shortener": {
-    "width": 1917,
-    "height": 877,
+    "width": 1024,
+    "height": 541,
     "widths": [
       400,
       800,
@@ -37,8 +37,8 @@
     ]
   },
   "static-site-generator": {
-    "width": 1280,
-    "height": 800,
+    "width": 1024,
+    "height": 511,
     "widths": [
       400,
       800,
@@ -46,8 +46,8 @@
     ]
   },
   "linkinbio": {
-    "width": 3024,
-    "height": 1540,
+    "width": 1024,
+    "height": 524,
     "widths": [
       400,
       800,
@@ -73,8 +73,8 @@
     ]
   },
   "planedle": {
-    "width": 1280,
-    "height": 800,
+    "width": 1024,
+    "height": 552,
     "widths": [
       400,
       800,
