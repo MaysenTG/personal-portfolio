@@ -22,7 +22,7 @@ export default defineConfig({
         name: 'Maysen Greenwood',
         short_name: 'Maysen',
         description:
-          'Software developer in New Zealand. Rails and C# at Henry Schein One, plus side projects like a Zwift workout builder.',
+          'Software developer in New Zealand. Rails and Ember on Dentally at Henry Schein One, plus side projects like a Zwift workout editor and Planedle.',
         theme_color: '#16141c',
         background_color: '#f4efe8',
         display: 'standalone',

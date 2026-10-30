@@ -4,20 +4,46 @@ import '@fontsource/source-serif-4/latin-600.css'
 import '@fontsource/source-sans-3/latin-400.css'
 import '@fontsource/source-sans-3/latin-500.css'
 import '@fontsource/source-sans-3/latin-600.css'
-import '@fontsource/source-sans-3/latin-700.css'
 import '../styles/global.css'
+import { profile } from '../data/site'
 
 interface Props {
   title?: string
   description?: string
-  heroImageHref?: string
 }
 
-const {
-  title = 'Maysen Greenwood',
-  description = 'Software developer in New Zealand. Rails and C# at Henry Schein One, plus side projects like a Zwift workout builder.',
-  heroImageHref,
-} = Astro.props
+const { title = 'Maysen Greenwood — Software developer', description = profile.description } =
+  Astro.props
+
+const site = Astro.site ?? new URL('https://maysengreenwood.com')
+const canonical = new URL('/', site)
+const ogImage = new URL('/assets/images/hero-image-1280.webp', site)
+const heroPreload = [640, 960, 1280, 1600]
+  .map((width) => `/assets/images/hero-image-${width}.avif ${width}w`)
+  .join(', ')
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  dateModified: '2026-10-31',
+  mainEntity: {
+    '@type': 'Person',
+    name: profile.name,
+    url: canonical.href,
+    jobTitle: 'Software developer',
+    email: `mailto:${profile.email}`,
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'NZ',
+    },
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Henry Schein One',
+    },
+    sameAs: [profile.github, profile.linkedin],
+    knowsAbout: ['Ruby on Rails', 'Ember', 'ASP.NET', 'React', 'TypeScript'],
+  },
+}
 ---
 
 <!doctype html>
@@ -27,40 +53,42 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="Maysen Greenwood" />
-    <link rel="canonical" href="https://maysengreenwood.com/" />
+    <meta name="author" content={profile.name} />
+    <meta name="theme-color" content="#16141c" />
+    <link rel="canonical" href={canonical.href} />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
-    <meta
-      property="og:description"
-      content="Software developer in New Zealand. Rails, C#, and a few things built for myself."
-    />
-    <meta property="og:url" content="https://maysengreenwood.com/" />
-    <meta property="og:site_name" content="Maysen Greenwood" />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
+    <meta property="og:image:alt" content="Star-filled night sky, the header photograph on this site" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    <meta
-      name="twitter:description"
-      content="Software developer in New Zealand. Rails, C#, and a few things built for myself."
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
+    <meta name="twitter:image:alt" content="Star-filled night sky, the header photograph on this site" />
+
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/images/hero-image-1280.avif"
+      imagesrcset={heroPreload}
+      imagesizes="100vw"
+      type="image/avif"
+      fetchpriority="high"
     />
 
-    {
-      heroImageHref && (
-        <link
-          rel="preload"
-          as="image"
-          href={heroImageHref}
-          type="image/webp"
-          fetchpriority="high"
-        />
-      )
-    }
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
 
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <script>
       import { registerSW } from 'virtual:pwa-register'

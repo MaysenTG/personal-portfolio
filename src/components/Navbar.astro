@@ -1,6 +1,9 @@
 ---
+import { profile } from '../data/site'
+
 const links = [
   { href: '#about', id: 'about', label: 'About' },
+  { href: '#skills', id: 'skills', label: 'Skills' },
   { href: '#projects', id: 'projects', label: 'Projects' },
   { href: '#contact-me', id: 'contact-me', label: 'Contact' },
 ]
@@ -35,7 +38,7 @@ const links = [
             target="_blank"
             rel="noreferrer noopener"
             class="nav-link"
-            href="https://github.com/MaysenTG"
+            href={profile.github}
             aria-label="GitHub"
           >
             <svg class="icon-social" viewBox="0 0 16 16" aria-hidden="true"
@@ -50,7 +53,7 @@ const links = [
             target="_blank"
             rel="noreferrer noopener"
             class="nav-link"
-            href="https://www.linkedin.com/in/maysen-greenwood/"
+            href={profile.linkedin}
             aria-label="LinkedIn"
           >
             <svg class="icon-social" viewBox="0 0 16 16" aria-hidden="true"
@@ -66,7 +69,7 @@ const links = [
 </nav>
 
 <script>
-  const SECTION_IDS = ['about', 'projects', 'contact-me'] as const
+  const SECTION_IDS = ['about', 'skills', 'projects', 'contact-me'] as const
   const nav = document.getElementById('site-nav')
   const toggle = document.getElementById('nav-toggle')
   const menu = document.getElementById('nav-menu')

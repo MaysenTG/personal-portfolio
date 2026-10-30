@@ -5,10 +5,13 @@ import ProjectCard from './ProjectCard.astro'
 
 <section class="section" id="projects">
   <div class="container">
-    <h2 class="section-title">Projects</h2>
-    <p class="section-lead">
-      A few things I’ve shipped. The static site creator and Zwift workout editor are the larger ones.
-    </p>
+    <div class="section-intro">
+      <h2 class="section-title">Projects</h2>
+      <p class="section-lead">
+        A few things I’ve shipped. The static site creator and the Zwift workout editor are the
+        larger ones.
+      </p>
+    </div>
     <ul class="project__list">
       {projects.map((project) => <ProjectCard project={project} />)}
     </ul>

@@ -1,5 +1,5 @@
 ---
-import { emailJs } from '../data/site'
+import { emailJs, profile } from '../data/site'
 ---
 
 <section class="section" id="contact-me">
@@ -7,12 +7,12 @@ import { emailJs } from '../data/site'
     <div class="contact__grid">
       <div>
         <h2 class="section-title">Contact</h2>
-        <p class="section-lead contact__info">
-          If you want to talk about a role, a bug, or a ride, email is the most reliable way to
-          reach me.
+        <p class="section-lead">
+          If you want to talk about a role, a bug, or a ride, email is the most reliable way to reach
+          me.
         </p>
         <p class="contact__info">
-          <a href="mailto:greenwood.maysen@gmail.com">greenwood.maysen@gmail.com</a>
+          <a class="contact__email" href={`mailto:${profile.email}`}>{profile.email}</a>
         </p>
       </div>
       <div>
@@ -37,24 +37,33 @@ import { emailJs } from '../data/site'
                 class="form-control"
                 name="email"
                 autocomplete="email"
+                inputmode="email"
                 required
               />
             </div>
             <div class="form-field form-field--last">
               <label class="form-label" for="message">Message</label>
-              <textarea id="message" rows="5" class="form-control" name="message" required
-              ></textarea>
+              <textarea
+                id="message"
+                rows="5"
+                class="form-control"
+                name="message"
+                enterkeyhint="send"
+                required></textarea>
             </div>
-            <p class="contact__status contact__status--error" id="contact-error" hidden>
-              That didn’t send. Try again, or just use the email on the left.
+            <p class="contact__status contact__status--error" id="contact-error" role="alert" hidden>
+              Name, email, and a message.
             </p>
-            <button type="submit" class="btn btn-primary btn-block" id="contact-submit" disabled>
+            <button type="submit" class="btn btn-primary btn-block" id="contact-submit">
               Send message
             </button>
           </form>
-          <p class="contact__status" id="contact-success" hidden>
+          <p class="contact__status" id="contact-success" role="status" hidden>
             Got it. I’ll reply when I can.
           </p>
+          <noscript>
+            <p class="contact__noscript">The form needs JavaScript. You can just email me.</p>
+          </noscript>
         </div>
       </div>
     </div>
@@ -71,32 +80,38 @@ import { emailJs } from '../data/site'
   const messageInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('message'))
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const validationMessage = 'Name, email, and a message.'
+  const sendFailureMessage = 'That didn’t send. Try again, or just email me.'
   let sending = false
 
-  function isValid() {
-    return (
-      emailRegex.test(emailInput.value.trim()) &&
-      nameInput.value.trim() &&
-      messageInput.value.trim()
-    )
+  /** @returns {HTMLInputElement | HTMLTextAreaElement | null} */
+  function firstInvalid() {
+    if (!nameInput.value.trim()) return nameInput
+    if (!emailRegex.test(emailInput.value.trim())) return emailInput
+    if (!messageInput.value.trim()) return messageInput
+    return null
   }
 
-  function syncButton() {
-    submitBtn.disabled = !isValid() || sending
-    submitBtn.textContent = sending ? 'Sending…' : 'Send message'
+  function showError(message) {
+    errorEl.textContent = message
+    errorEl.hidden = false
   }
-
-  ;[nameInput, emailInput, messageInput].forEach((el) => {
-    el.addEventListener('input', syncButton)
-  })
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
-    if (!isValid() || sending) return
+    if (sending) return
+
+    const invalid = firstInvalid()
+    if (invalid) {
+      showError(validationMessage)
+      invalid.focus()
+      return
+    }
 
     sending = true
     errorEl.hidden = true
-    syncButton()
+    submitBtn.disabled = true
+    submitBtn.textContent = 'Sending…'
 
     try {
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
@@ -120,10 +135,11 @@ import { emailJs } from '../data/site'
       successEl.hidden = false
     } catch (err) {
       console.error(err)
-      errorEl.hidden = false
+      showError(sendFailureMessage)
     } finally {
       sending = false
-      syncButton()
+      submitBtn.disabled = false
+      submitBtn.textContent = 'Send message'
     }
   })
 </script>

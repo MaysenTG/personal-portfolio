@@ -1,4 +1,5 @@
 ---
+import { profile } from '../data/site'
 ---
 
 <footer class="site-footer">
@@ -12,7 +13,7 @@
         <a
           target="_blank"
           rel="noreferrer noopener"
-          href="https://github.com/MaysenTG"
+          href={profile.github}
           aria-label="GitHub"
         >
           <svg class="icon-social" viewBox="0 0 16 16" aria-hidden="true"
@@ -26,7 +27,7 @@
         <a
           target="_blank"
           rel="noreferrer noopener"
-          href="https://www.linkedin.com/in/maysen-greenwood/"
+          href={profile.linkedin}
           aria-label="LinkedIn"
         >
           <svg class="icon-social" viewBox="0 0 16 16" aria-hidden="true"

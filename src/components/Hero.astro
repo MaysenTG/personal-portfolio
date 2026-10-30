@@ -3,7 +3,7 @@ import ResponsivePicture from './ResponsivePicture.astro'
 import { heroImageWidths } from '../data/projects'
 ---
 
-<section class="hero">
+<section class="hero" aria-label="Introduction">
   <ResponsivePicture
     name="hero-image"
     widths={[...heroImageWidths]}
@@ -17,11 +17,12 @@ import { heroImageWidths } from '../data/projects'
   />
   <div class="container">
     <div class="hero__content">
+      <p class="hero__kicker">New Zealand</p>
       <p class="hero__greeting">Hey, I’m Maysen.</p>
       <h1 class="hero__title">I write software for the web.</h1>
       <p class="hero__tagline">
-        I work as an intermediate developer at Henry Schein One. I spend most of my time in Ruby
-        on Rails and Ember, but I enjoy building with .NET and React.
+        I work on Dentally at Henry Schein One. I spend most of my time in Rails and Ember, and I
+        also like building with .NET and React.
       </p>
       <div class="hero__actions">
         <a class="btn btn-primary" href="#projects">See the work</a>

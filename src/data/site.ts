@@ -1,19 +1,24 @@
+export const profile = {
+  name: 'Maysen Greenwood',
+  email: 'greenwood.maysen@gmail.com',
+  github: 'https://github.com/MaysenTG',
+  linkedin: 'https://www.linkedin.com/in/maysen-greenwood/',
+  description:
+    'Software developer in New Zealand. Rails and Ember on Dentally at Henry Schein One, plus side projects like a Zwift workout editor and Planedle.',
+} as const
+
 export const skillGroups = [
   {
-    title: 'Frameworks/Languages',
-    items: ['Ruby on Rails', 'Ember', 'ASP.NET', 'React'],
+    title: 'Frameworks',
+    items: ['Ruby on Rails', 'Ember', 'ASP.NET', 'React', 'TypeScript', 'Hotwire'],
   },
   {
-    title: 'Services/Infrastructure',
+    title: 'Services',
     items: ['PostgreSQL', 'Stripe', 'Cloudflare'],
   },
   {
     title: 'Other',
-    items: [
-      'Optimizing database queries',
-      'Mentoring junior developers',
-      'Writing documentation',
-    ],
+    items: ['Mentoring junior developers', 'Optimizing database queries', 'Writing documentation'],
   },
 ] as const
 

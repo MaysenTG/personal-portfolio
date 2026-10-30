@@ -7,7 +7,10 @@ export type Project = {
   image: string
   imageWidth: number
   imageHeight: number
-  skills: string
+  /** object-position for the cropped screenshot */
+  imagePosition?: string
+  alt: string
+  skills: readonly string[]
   featured?: boolean
 }
 
@@ -21,19 +24,21 @@ export const projects: Project[] = [
     image: 'static-site-generator',
     imageWidth: 1024,
     imageHeight: 511,
-    skills: 'Ruby on Rails, Hotwire, Cloudflare R2',
+    alt: 'Gusto Cloud editor open on the HTML for a site called maysens-website',
+    skills: ['Ruby on Rails', 'Hotwire', 'Cloudflare R2'],
     featured: true,
   },
   {
     title: 'ZWO Builder',
     description:
-      'A Zwift workout editor I built because clicking intervals together in-game is slow. Drag blocks around, describe a change in plain English, export a .zwo. Workouts stay on the the browser in IndexedDB.',
+      'A Zwift workout editor I built because clicking intervals together in-game is slow. Drag blocks around, describe a change in plain English, export a .zwo. Workouts stay in the browser, in IndexedDB.',
     live_url: 'https://zwo-builder.pages.dev/',
     github_repo: 'https://github.com/MaysenTG/zwift-workout-creator',
     image: 'zwift-workout-builder',
     imageWidth: 1919,
     imageHeight: 875,
-    skills: 'React, TypeScript, Cloudflare, OpenAI',
+    alt: 'ZWO Builder editing a sweet spot workout, with the power profile in the center',
+    skills: ['React', 'TypeScript', 'Cloudflare', 'OpenAI'],
     featured: true,
   },
   {
@@ -45,7 +50,8 @@ export const projects: Project[] = [
     image: 'markdown-website-builder',
     imageWidth: 1920,
     imageHeight: 980,
-    skills: 'React, TypeScript, Cloudflare, OpenAI',
+    alt: 'Markdown website builder with source on the left and a live preview of Field Notes on the right',
+    skills: ['React', 'TypeScript', 'Cloudflare', 'OpenAI'],
   },
   {
     title: 'URL shortener',
@@ -56,18 +62,20 @@ export const projects: Project[] = [
     image: 'url-shortener',
     imageWidth: 1024,
     imageHeight: 541,
-    skills: 'Ruby on Rails',
+    alt: 'URL shortener turning a long link into a short localhost address',
+    skills: ['Ruby on Rails'],
   },
   {
     title: 'Link in bio',
     description:
-      'Link in bio app with an editable bio page. The app uses Hotwire/StimulusJS to update the bio page in real time. Links are orderable to prioritize the most important links.',
+      'Link in bio app with an editable bio page. The app uses Hotwire/StimulusJS to update the bio page in real time. Links are orderable to prioritize the most important links. Images live on Cloudflare R2.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/RoR-link_in_bio',
     image: 'linkinbio',
     imageWidth: 1024,
     imageHeight: 524,
-    skills: 'Ruby on Rails, Hotwire/StimulusJS, Cloudflare R2 asset storage',
+    alt: 'LinkFlow homepage with the line “One page for every link you share.”',
+    skills: ['Ruby on Rails', 'Hotwire', 'Cloudflare R2'],
   },
   {
     title: 'This site',
@@ -78,7 +86,8 @@ export const projects: Project[] = [
     image: 'personal-portfolio',
     imageWidth: 1919,
     imageHeight: 854,
-    skills: 'Astro, Service Worker',
+    alt: 'This portfolio’s introduction on a star field',
+    skills: ['Astro', 'TypeScript'],
   },
   {
     title: 'Fake API',
@@ -89,8 +98,8 @@ export const projects: Project[] = [
     image: 'fake-api',
     imageWidth: 3018,
     imageHeight: 1524,
-    skills:
-      'Sinatra (Ruby), RESTful APIs, JSON formatted responses from OpenAI, agressive caching',
+    alt: 'Fake API page with a request form beside a sample JSON response',
+    skills: ['Sinatra', 'OpenAI'],
   },
   {
     title: 'Planedle',
@@ -101,7 +110,9 @@ export const projects: Project[] = [
     image: 'planedle',
     imageWidth: 1024,
     imageHeight: 552,
-    skills: 'JavaScript, Vite, HTML, CSS',
+    imagePosition: 'center',
+    alt: 'Planedle showing a tight crop of an aircraft tail marked N144',
+    skills: ['JavaScript', 'Vite'],
   },
 ]
 
