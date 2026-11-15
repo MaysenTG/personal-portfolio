@@ -123,12 +123,17 @@ export const projects: Project[] = [
     showOnHome: true,
   },
   {
-    title: 'curlcard',
+    title: 'CurlCard',
     description:
-      'Paste a curl command to get a readable breakdown of each part. This project is still in progress.',
-    live_url: '',
+      'Paste a curl command to get a readable breakdown of the request. Edit any field and the command updates, or copy the same request as fetch, Ruby, or HTTPie.',
+    live_url: 'https://curlcard.pages.dev',
     github_repo: 'https://github.com/MaysenTG/curlcard',
-    skills: ['TypeScript'],
+    image: 'curlcard',
+    imageWidth: 1024,
+    imageHeight: 563,
+    alt: 'CurlCard with a pasted curl command above and editable method, URL, and query fields below',
+    skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    showOnHome: true,
   },
   {
     title: 'Markdown website builder',

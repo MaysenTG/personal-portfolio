@@ -21,6 +21,7 @@ const jobs = {
   'pastetable.jpg': { widths: [400, 800, 1200], quality: 75 },
   'cronclock.jpg': { widths: [400, 800, 1200], quality: 75 },
   'whofunds.jpg': { widths: [400, 800, 1200], quality: 75 },
+  'curlcard.jpg': { widths: [400, 800, 1200], quality: 75 },
 }
 
 await mkdir(outDir, { recursive: true })
