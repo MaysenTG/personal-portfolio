@@ -1,0 +1,253 @@
+---
+import {
+  getProjectSkills,
+  getUsedProjectCategories,
+  slugifyFilterValue,
+} from '../data/projects'
+
+const categories = getUsedProjectCategories()
+const skills = getProjectSkills()
+---
+
+<div class="project-filters" data-project-filters>
+  <div class="project-filters__search">
+    <label class="visually-hidden" for="project-search">Search projects</label>
+    <input
+      id="project-search"
+      class="project-filters__search-input form-control"
+      type="search"
+      name="q"
+      placeholder="Search projects"
+      autocomplete="off"
+      data-filter-search
+    />
+  </div>
+
+  <div class="project-filters__groups">
+    <div class="project-filters__group" role="group" aria-labelledby="project-filter-kind">
+      <p class="project-filters__label" id="project-filter-kind">Kind</p>
+      <div class="project-filters__options">
+        <button
+          type="button"
+          class="project-filters__chip is-active"
+          data-filter-category=""
+          aria-pressed="true"
+        >
+          All
+        </button>
+        {
+          categories.map((category) => (
+            <button
+              type="button"
+              class="project-filters__chip"
+              data-filter-category={slugifyFilterValue(category)}
+              aria-pressed="false"
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="project-filters__group" role="group" aria-labelledby="project-filter-skills">
+      <p class="project-filters__label" id="project-filter-skills">Built with</p>
+      <div class="project-filters__options">
+        <button
+          type="button"
+          class="project-filters__chip is-active"
+          data-filter-skill=""
+          aria-pressed="true"
+        >
+          All
+        </button>
+        {
+          skills.map((skill) => (
+            <button
+              type="button"
+              class="project-filters__chip"
+              data-filter-skill={slugifyFilterValue(skill)}
+              aria-pressed="false"
+            >
+              {skill}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="project-filters__group" role="group" aria-labelledby="project-filter-extras">
+      <p class="project-filters__label" id="project-filter-extras">Also</p>
+      <div class="project-filters__options">
+        <button
+          type="button"
+          class="project-filters__chip"
+          data-filter-live
+          aria-pressed="false"
+        >
+          Live demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-filters__meta">
+    <p class="project-filters__count" data-filter-count aria-live="polite"></p>
+    <button type="button" class="project-filters__clear" data-filter-clear hidden>
+      Clear filters
+    </button>
+  </div>
+</div>
+
+<script>
+  function initProjectFilters() {
+    const root = document.querySelector<HTMLElement>('[data-project-filters]')
+    if (!root) return
+
+    const list = document.querySelector<HTMLElement>('.project__list')
+    if (!list) return
+
+    const items = [...list.querySelectorAll<HTMLElement>('[data-project-item]')]
+    const searchInput = root.querySelector<HTMLInputElement>('[data-filter-search]')
+    const countEl = root.querySelector<HTMLElement>('[data-filter-count]')
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-filter-clear]')
+    const categoryButtons = [
+      ...root.querySelectorAll<HTMLButtonElement>('[data-filter-category]'),
+    ]
+    const skillButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-skill]')]
+    const liveButton = root.querySelector<HTMLButtonElement>('[data-filter-live]')
+    const emptyEl = document.querySelector<HTMLElement>('[data-filter-empty]')
+
+    let category = ''
+    let skill = ''
+    let query = ''
+    let liveOnly = false
+
+    const setPressed = (
+      buttons: HTMLButtonElement[],
+      attr: 'filterCategory' | 'filterSkill',
+      value: string,
+    ) => {
+      for (const button of buttons) {
+        const active = (button.dataset[attr] ?? '') === value
+        button.classList.toggle('is-active', active)
+        button.setAttribute('aria-pressed', active ? 'true' : 'false')
+      }
+    }
+
+    const syncUrl = () => {
+      const params = new URLSearchParams()
+      if (category) params.set('kind', category)
+      if (skill) params.set('tag', skill)
+      if (query) params.set('q', query)
+      if (liveOnly) params.set('live', '1')
+      const next = params.toString()
+      const url = next ? `${window.location.pathname}?${next}` : window.location.pathname
+      window.history.replaceState({}, '', url)
+    }
+
+    const apply = () => {
+      let visible = 0
+
+      for (const item of items) {
+        const categories = (item.dataset.categories ?? '').split(/\s+/).filter(Boolean)
+        const skills = (item.dataset.skills ?? '').split(/\s+/).filter(Boolean)
+        const search = item.dataset.search ?? ''
+        const hasLive = item.dataset.hasLive === 'true'
+
+        const matchesCategory = !category || categories.includes(category)
+        const matchesSkill = !skill || skills.includes(skill)
+        const matchesQuery = !query || search.includes(query)
+        const matchesLive = !liveOnly || hasLive
+        const show = matchesCategory && matchesSkill && matchesQuery && matchesLive
+
+        item.hidden = !show
+        if (show) visible += 1
+      }
+
+      if (countEl) {
+        const total = items.length
+        countEl.textContent =
+          visible === total
+            ? `${total} projects`
+            : `${visible} of ${total} projects`
+      }
+
+      if (clearBtn) {
+        const active = Boolean(category || skill || query || liveOnly)
+        clearBtn.hidden = !active
+      }
+
+      if (emptyEl) {
+        emptyEl.hidden = visible !== 0
+      }
+
+      if (liveButton) {
+        liveButton.classList.toggle('is-active', liveOnly)
+        liveButton.setAttribute('aria-pressed', liveOnly ? 'true' : 'false')
+      }
+
+      syncUrl()
+    }
+
+    const readUrl = () => {
+      const params = new URLSearchParams(window.location.search)
+      category = params.get('kind') ?? ''
+      skill = params.get('tag') ?? ''
+      query = (params.get('q') ?? '').trim().toLowerCase()
+      liveOnly = params.get('live') === '1'
+
+      if (searchInput) searchInput.value = params.get('q') ?? ''
+      setPressed(categoryButtons, 'filterCategory', category)
+      setPressed(skillButtons, 'filterSkill', skill)
+      apply()
+    }
+
+    for (const button of categoryButtons) {
+      button.addEventListener('click', () => {
+        category = button.dataset.filterCategory ?? ''
+        setPressed(categoryButtons, 'filterCategory', category)
+        apply()
+      })
+    }
+
+    for (const button of skillButtons) {
+      button.addEventListener('click', () => {
+        skill = button.dataset.filterSkill ?? ''
+        setPressed(skillButtons, 'filterSkill', skill)
+        apply()
+      })
+    }
+
+    liveButton?.addEventListener('click', () => {
+      liveOnly = !liveOnly
+      apply()
+    })
+
+    let searchTimer = 0
+    searchInput?.addEventListener('input', () => {
+      window.clearTimeout(searchTimer)
+      searchTimer = window.setTimeout(() => {
+        query = searchInput.value.trim().toLowerCase()
+        apply()
+      }, 120)
+    })
+
+    clearBtn?.addEventListener('click', () => {
+      category = ''
+      skill = ''
+      query = ''
+      liveOnly = false
+      if (searchInput) searchInput.value = ''
+      setPressed(categoryButtons, 'filterCategory', '')
+      setPressed(skillButtons, 'filterSkill', '')
+      apply()
+      searchInput?.focus()
+    })
+
+    readUrl()
+  }
+
+  initProjectFilters()
+  document.addEventListener('astro:page-load', initProjectFilters)
+</script>

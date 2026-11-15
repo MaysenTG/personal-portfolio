@@ -594,6 +594,119 @@ img {
   font-weight: 600;
 }
 
+/* Project filters (/projects) */
+.project-filters {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.project-filters__search {
+  max-width: 22rem;
+  margin-bottom: 1.35rem;
+}
+
+.project-filters__search-input {
+  background: #fff;
+}
+
+.project-filters__search-input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.project-filters__groups {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.project-filters__group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.project-filters__label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.project-filters__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.project-filters__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.project-filters__chip:hover {
+  border-color: #cfc4b6;
+  background: #fff;
+}
+
+.project-filters__chip.is-active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-link);
+}
+
+.project-filters__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.project-filters__count {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+}
+
+.project-filters__clear {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-link);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.project-filters__clear:hover {
+  color: var(--color-link-hover);
+}
+
+.project-filters__empty {
+  margin: 1.5rem 0 0;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
 .projects-more {
   margin: 2rem 0 0;
   text-align: center;
@@ -636,6 +749,11 @@ img {
   margin: 0;
   display: block;
   list-style: none;
+}
+
+/* Beat `.project { display: block }` so filter hiding actually works. */
+.project[hidden] {
+  display: none;
 }
 
 .project__card {
