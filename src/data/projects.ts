@@ -1,3 +1,14 @@
+/** Semantic groupings for the projects page filters. */
+export const projectCategories = [
+  'Dev tools',
+  'Web apps',
+  'Data',
+  'Fitness',
+  'Games',
+] as const
+
+export type ProjectCategory = (typeof projectCategories)[number]
+
 export type Project = {
   title: string
   description: string
@@ -11,6 +22,8 @@ export type Project = {
   imagePosition?: string
   alt?: string
   skills: readonly string[]
+  /** What kind of project this is — used for semantic filters on /projects. */
+  categories: readonly ProjectCategory[]
   featured?: boolean
   /** Shown on the homepage project strip (featured projects always are). */
   showOnHome?: boolean
@@ -56,6 +69,36 @@ export function getHomepageProjects(all: readonly Project[] = projects): Project
   return [...featured, ...rest]
 }
 
+export function slugifyFilterValue(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+/** Unique skills across projects, most-used first, then A–Z. */
+export function getProjectSkills(all: readonly Project[] = projects): string[] {
+  const counts = new Map<string, number>()
+  for (const project of all) {
+    for (const skill of project.skills) {
+      counts.set(skill, (counts.get(skill) ?? 0) + 1)
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([skill]) => skill)
+}
+
+/** Categories that actually appear on at least one project, in display order. */
+export function getUsedProjectCategories(
+  all: readonly Project[] = projects,
+): ProjectCategory[] {
+  const used = new Set(all.flatMap((project) => project.categories))
+  return projectCategories.filter((category) => used.has(category))
+}
+
 export const projects: Project[] = [
   {
     title: 'Static site creator',
@@ -68,6 +111,7 @@ export const projects: Project[] = [
     imageHeight: 511,
     alt: 'Gusto Cloud editor open on the HTML for a site called maysens-website',
     skills: ['Ruby on Rails', 'Hotwire', 'Cloudflare R2'],
+    categories: ['Web apps'],
     featured: true,
   },
   {
@@ -81,6 +125,7 @@ export const projects: Project[] = [
     imageHeight: 875,
     alt: 'ZWO Builder editing a sweet spot workout, with the power profile in the centre',
     skills: ['React', 'TypeScript', 'Cloudflare', 'OpenAI'],
+    categories: ['Fitness'],
     featured: true,
   },
   {
@@ -94,6 +139,7 @@ export const projects: Project[] = [
     imageHeight: 564,
     alt: 'Who Funds NZ showing amount-by-party bars, with National, ACT, Conservative and Labour leading the filtered totals',
     skills: ['React', 'TypeScript', 'Vite', 'Recharts'],
+    categories: ['Data'],
     showOnHome: true,
   },
   {
@@ -107,6 +153,7 @@ export const projects: Project[] = [
     imageHeight: 571,
     alt: 'CronClock explaining 0 9 20 * * as 9:00 AM on day 20 of every month, with Auckland and UTC next runs',
     skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    categories: ['Dev tools'],
     showOnHome: true,
   },
   {
@@ -120,6 +167,7 @@ export const projects: Project[] = [
     imageHeight: 556,
     alt: 'PasteTable with JSON of people on the left and a sortable name, location and title table below',
     skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    categories: ['Dev tools'],
     showOnHome: true,
   },
   {
@@ -133,6 +181,7 @@ export const projects: Project[] = [
     imageHeight: 563,
     alt: 'CurlCard with a pasted curl command above and editable method, URL, and query fields below',
     skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    categories: ['Dev tools'],
     showOnHome: true,
   },
   {
@@ -146,6 +195,7 @@ export const projects: Project[] = [
     imageHeight: 980,
     alt: 'Markdown website builder with source on the left and a live preview of Field Notes on the right',
     skills: ['React', 'TypeScript', 'Cloudflare', 'OpenAI'],
+    categories: ['Web apps'],
   },
   {
     title: 'URL shortener',
@@ -158,6 +208,7 @@ export const projects: Project[] = [
     imageHeight: 541,
     alt: 'URL shortener turning a long link into a short localhost address',
     skills: ['Ruby on Rails'],
+    categories: ['Dev tools', 'Web apps'],
   },
   {
     title: 'Link in bio',
@@ -170,6 +221,7 @@ export const projects: Project[] = [
     imageHeight: 524,
     alt: 'LinkFlow homepage with the line “One page for every link you share.”',
     skills: ['Ruby on Rails', 'Hotwire', 'Cloudflare R2'],
+    categories: ['Web apps'],
   },
   {
     title: 'This site',
@@ -182,6 +234,7 @@ export const projects: Project[] = [
     imageHeight: 854,
     alt: 'This portfolio’s introduction on a star field',
     skills: ['Astro', 'TypeScript'],
+    categories: ['Web apps'],
   },
   {
     title: 'Fake API',
@@ -194,6 +247,7 @@ export const projects: Project[] = [
     imageHeight: 1524,
     alt: 'Fake API page with a request form beside a sample JSON response',
     skills: ['Sinatra', 'OpenAI'],
+    categories: ['Dev tools'],
   },
   {
     title: 'Planedle',
@@ -207,6 +261,7 @@ export const projects: Project[] = [
     imagePosition: 'center',
     alt: 'Planedle showing a tight crop of an aircraft tail marked N144',
     skills: ['JavaScript', 'Vite'],
+    categories: ['Games'],
   },
 ]
 

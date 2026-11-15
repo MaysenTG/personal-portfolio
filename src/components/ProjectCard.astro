@@ -1,7 +1,7 @@
 ---
 import ResponsivePicture from './ResponsivePicture.astro'
 import type { Project } from '../data/projects'
-import { projectImageWidths, resolveProjectImage } from '../data/projects'
+import { projectImageWidths, resolveProjectImage, slugifyFilterValue } from '../data/projects'
 
 interface Props {
   project: Project
@@ -14,9 +14,21 @@ const featuredClass = project.featured ? 'project--featured' : ''
 const primaryHref = project.live_url || project.github_repo
 const image = resolveProjectImage(project)
 const Heading = headingLevel
+const categorySlugs = project.categories.map(slugifyFilterValue).join(' ')
+const skillSlugs = project.skills.map(slugifyFilterValue).join(' ')
+const searchText = [project.title, project.description, ...project.skills, ...project.categories]
+  .join(' ')
+  .toLowerCase()
 ---
 
-<li class={`project ${featuredClass}`}>
+<li
+  class={`project ${featuredClass}`}
+  data-project-item
+  data-categories={categorySlugs}
+  data-skills={skillSlugs}
+  data-search={searchText}
+  data-has-live={project.live_url ? 'true' : 'false'}
+>
   <article class="project__card">
     <div
       class="project__image-wrapper"
