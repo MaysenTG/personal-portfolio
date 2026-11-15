@@ -22,7 +22,7 @@ export default defineConfig({
         name: 'Maysen Greenwood',
         short_name: 'Maysen',
         description:
-          'Software developer in New Zealand. Rails and Ember on Dentally at Henry Schein One, plus side projects like a Zwift workout editor and Planedle.',
+          'Software developer in New Zealand, working on Dentally at Henry Schein One with Rails and Ember. I also build side projects such as Who Funds NZ and ZWO Builder.',
         theme_color: '#16141c',
         background_color: '#f4efe8',
         display: 'standalone',

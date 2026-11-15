@@ -16,7 +16,7 @@
   "dependencies": {
     "@fontsource/source-sans-3": "^5.3.0",
     "@fontsource/source-serif-4": "^5.3.0",
-    "astro": "7.3.5"
+    "astro": "^7.4.12"
   },
   "devDependencies": {
     "@vite-pwa/astro": "^1.2.0",

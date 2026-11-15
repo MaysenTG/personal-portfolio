@@ -8,8 +8,7 @@ import { emailJs, profile } from '../data/site'
       <div>
         <h2 class="section-title">Contact</h2>
         <p class="section-lead">
-          If you want to talk about a role, a bug, or a ride, email is the most reliable way to reach
-          me.
+          Email me about a role, a project, or a ride, or send a message with the form.
         </p>
         <p class="contact__info">
           <a class="contact__email" href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -52,17 +51,17 @@ import { emailJs, profile } from '../data/site'
                 required></textarea>
             </div>
             <p class="contact__status contact__status--error" id="contact-error" role="alert" hidden>
-              Name, email, and a message.
+              Enter your name, email, and a message.
             </p>
             <button type="submit" class="btn btn-primary btn-block" id="contact-submit">
               Send message
             </button>
           </form>
           <p class="contact__status" id="contact-success" role="status" hidden>
-            Got it. I’ll reply when I can.
+            Your message is sent. I will reply soon.
           </p>
           <noscript>
-            <p class="contact__noscript">The form needs JavaScript. You can just email me.</p>
+            <p class="contact__noscript">The form needs JavaScript. You can also email me.</p>
           </noscript>
         </div>
       </div>
@@ -80,8 +79,8 @@ import { emailJs, profile } from '../data/site'
   const messageInput = /** @type {HTMLTextAreaElement} */ (document.getElementById('message'))
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  const validationMessage = 'Name, email, and a message.'
-  const sendFailureMessage = 'That didn’t send. Try again, or just email me.'
+  const validationMessage = 'Enter your name, email, and a message.'
+  const sendFailureMessage = 'The message did not send. Try again, or email me.'
   let sending = false
 
   /** @returns {HTMLInputElement | HTMLTextAreaElement | null} */

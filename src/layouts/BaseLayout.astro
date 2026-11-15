@@ -10,26 +10,45 @@ import { profile } from '../data/site'
 interface Props {
   title?: string
   description?: string
+  /** Pathname for the canonical URL, e.g. `/` or `/projects` */
+  pathname?: string
+  ogImagePath?: string
+  ogImageAlt?: string
+  ogImageWidth?: number
+  ogImageHeight?: number
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[]
+  /** Preload the hero AVIF set (homepage only) */
+  preloadHero?: boolean
 }
 
-const { title = 'Maysen Greenwood — Software developer', description = profile.description } =
-  Astro.props
+const {
+  title = 'Maysen Greenwood — Software developer',
+  description = profile.description,
+  pathname = Astro.url.pathname,
+  ogImagePath = '/assets/images/hero-image-1280.webp',
+  ogImageAlt = 'Star-filled night sky, the header photograph on this site',
+  ogImageWidth = 1280,
+  ogImageHeight = 720,
+  jsonLd,
+  preloadHero = false,
+} = Astro.props
 
 const site = Astro.site ?? new URL('https://maysengreenwood.com')
-const canonical = new URL('/', site)
-const ogImage = new URL('/assets/images/hero-image-1280.webp', site)
+const normalizedPath = pathname === '/' ? '/' : pathname.replace(/\/$/, '')
+const canonical = new URL(normalizedPath, site)
+const ogImage = new URL(ogImagePath, site)
 const heroPreload = [640, 960, 1280, 1600]
   .map((width) => `/assets/images/hero-image-${width}.avif ${width}w`)
   .join(', ')
 
-const jsonLd = {
+const defaultJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
-  dateModified: '2026-10-31',
+  dateModified: '2026-11-15',
   mainEntity: {
     '@type': 'Person',
     name: profile.name,
-    url: canonical.href,
+    url: new URL('/', site).href,
     jobTitle: 'Software developer',
     email: `mailto:${profile.email}`,
     address: {
@@ -44,6 +63,9 @@ const jsonLd = {
     knowsAbout: ['Ruby on Rails', 'Ember', 'ASP.NET', 'React', 'TypeScript'],
   },
 }
+
+const structuredData = jsonLd ?? defaultJsonLd
+const structuredDataBlocks = Array.isArray(structuredData) ? structuredData : [structuredData]
 ---
 
 <!doctype html>
@@ -54,6 +76,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#16141c" />
     <link rel="canonical" href={canonical.href} />
 
@@ -63,27 +86,39 @@ const jsonLd = {
     <meta property="og:url" content={canonical.href} />
     <meta property="og:site_name" content={profile.name} />
     <meta property="og:image" content={ogImage.href} />
-    <meta property="og:image:width" content="1280" />
-    <meta property="og:image:height" content="720" />
-    <meta property="og:image:alt" content="Star-filled night sky, the header photograph on this site" />
+    <meta property="og:image:width" content={String(ogImageWidth)} />
+    <meta property="og:image:height" content={String(ogImageHeight)} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content="en_NZ" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage.href} />
-    <meta name="twitter:image:alt" content="Star-filled night sky, the header photograph on this site" />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
-    <link
-      rel="preload"
-      as="image"
-      href="/assets/images/hero-image-1280.avif"
-      imagesrcset={heroPreload}
-      imagesizes="100vw"
-      type="image/avif"
-      fetchpriority="high"
-    />
+    {
+      preloadHero && (
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/images/hero-image-1280.avif"
+          imagesrcset={heroPreload}
+          imagesizes="100vw"
+          type="image/avif"
+          fetchpriority="high"
+        />
+      )
+    }
 
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
+    {
+      structuredDataBlocks.map((block) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(block).replace(/</g, '\\u003c')}
+        />
+      ))
+    }
 
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
   </head>

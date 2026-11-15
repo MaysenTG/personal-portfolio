@@ -1,11 +1,22 @@
 ---
 import { profile } from '../data/site'
 
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+const onHome = path === '/'
+const onProjects = path === '/projects'
+const sectionPrefix = onHome ? '' : '/'
+
 const links = [
-  { href: '#about', id: 'about', label: 'About' },
-  { href: '#skills', id: 'skills', label: 'Skills' },
-  { href: '#projects', id: 'projects', label: 'Projects' },
-  { href: '#contact-me', id: 'contact-me', label: 'Contact' },
+  { href: `${sectionPrefix}#about`, id: 'about', label: 'About', section: true },
+  { href: `${sectionPrefix}#skills`, id: 'skills', label: 'Skills', section: true },
+  {
+    href: onHome ? '#projects' : '/projects',
+    id: 'projects',
+    label: 'Projects',
+    section: onHome,
+    active: onProjects,
+  },
+  { href: `${sectionPrefix}#contact-me`, id: 'contact-me', label: 'Contact', section: true },
 ]
 ---
 
@@ -27,7 +38,12 @@ const links = [
         {
           links.map((link) => (
             <li>
-              <a class="nav-link" data-section={link.id} href={link.href}>
+              <a
+                class:list={['nav-link', { active: link.active }]}
+                data-section={link.section ? link.id : undefined}
+                href={link.href}
+                aria-current={link.active ? 'page' : undefined}
+              >
                 {link.label}
               </a>
             </li>
@@ -73,6 +89,7 @@ const links = [
   const nav = document.getElementById('site-nav')
   const toggle = document.getElementById('nav-toggle')
   const menu = document.getElementById('nav-menu')
+  const isHome = window.location.pathname.replace(/\/$/, '') === '' || window.location.pathname === '/'
 
   function setScrolled() {
     nav?.classList.toggle('navbar--scrolled', window.scrollY > 80)
@@ -97,11 +114,11 @@ const links = [
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
   })
 
-  document.querySelectorAll<HTMLAnchorElement>('.nav-link[data-section]').forEach((link) => {
+  document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach((link) => {
     link.addEventListener('click', () => closeMenu())
   })
 
-  if ('IntersectionObserver' in window) {
+  if (isHome && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries

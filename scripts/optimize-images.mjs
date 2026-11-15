@@ -17,6 +17,10 @@ const jobs = {
   'personal-portfolio.webp': { widths: [400, 800, 1200], quality: 75 },
   'fake-api.webp': { widths: [400, 800, 1200], quality: 75 },
   'planedle.png': { widths: [400, 800, 1200], quality: 75 },
+  'project-placeholder.png': { widths: [400, 800, 1200], quality: 75 },
+  'pastetable.jpg': { widths: [400, 800, 1200], quality: 75 },
+  'cronclock.jpg': { widths: [400, 800, 1200], quality: 75 },
+  'whofunds.jpg': { widths: [400, 800, 1200], quality: 75 },
 }
 
 await mkdir(outDir, { recursive: true })

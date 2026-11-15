@@ -80,5 +80,41 @@
       800,
       1200
     ]
+  },
+  "project-placeholder": {
+    "width": 1200,
+    "height": 675,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "pastetable": {
+    "width": 1024,
+    "height": 556,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "cronclock": {
+    "width": 1024,
+    "height": 571,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
+  },
+  "whofunds": {
+    "width": 1024,
+    "height": 564,
+    "widths": [
+      400,
+      800,
+      1200
+    ]
   }
 }

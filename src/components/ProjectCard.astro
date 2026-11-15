@@ -1,43 +1,47 @@
 ---
 import ResponsivePicture from './ResponsivePicture.astro'
 import type { Project } from '../data/projects'
-import { projectImageWidths } from '../data/projects'
+import { projectImageWidths, resolveProjectImage } from '../data/projects'
 
 interface Props {
   project: Project
+  /** Use h2 on dedicated pages where the card is a top-level section item */
+  headingLevel?: 'h2' | 'h3'
 }
 
-const { project } = Astro.props
+const { project, headingLevel = 'h3' } = Astro.props
 const featuredClass = project.featured ? 'project--featured' : ''
 const primaryHref = project.live_url || project.github_repo
+const image = resolveProjectImage(project)
+const Heading = headingLevel
 ---
 
 <li class={`project ${featuredClass}`}>
   <article class="project__card">
     <div
       class="project__image-wrapper"
-      style={project.imagePosition ? `--project-image-position: ${project.imagePosition}` : undefined}
+      style={image.imagePosition ? `--project-image-position: ${image.imagePosition}` : undefined}
     >
       <ResponsivePicture
-        name={project.image}
+        name={image.image}
         widths={[...projectImageWidths]}
         sizes={
           project.featured
             ? '(min-width: 900px) 55vw, 100vw'
             : '(min-width: 900px) 33vw, (min-width: 600px) 50vw, 100vw'
         }
-        width={project.imageWidth}
-        height={project.imageHeight}
-        alt={project.alt}
+        width={image.imageWidth}
+        height={image.imageHeight}
+        alt={image.alt}
         class="project__img"
         loading={project.featured ? 'eager' : 'lazy'}
       />
     </div>
     <div class="project__content">
       <div class="project__content-main">
-        <h3 class="project__title">
+        <Heading class="project__title">
           <a href={primaryHref} rel="noopener noreferrer" target="_blank">{project.title}</a>
-        </h3>
+        </Heading>
         <ul class="project__skills-list">
           {project.skills.map((skill) => <li class="project__skill-tag">{skill}</li>)}
         </ul>

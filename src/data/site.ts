@@ -4,21 +4,21 @@ export const profile = {
   github: 'https://github.com/MaysenTG',
   linkedin: 'https://www.linkedin.com/in/maysen-greenwood/',
   description:
-    'Software developer in New Zealand. Rails and Ember on Dentally at Henry Schein One, plus side projects like a Zwift workout editor and Planedle.',
+    'Software developer in New Zealand, working on Dentally at Henry Schein One with Rails and Ember. I also build side projects such as Who Funds NZ and ZWO Builder.',
 } as const
 
 export const skillGroups = [
   {
-    title: 'Frameworks',
+    title: 'Languages and frameworks',
     items: ['Ruby on Rails', 'Ember', 'ASP.NET', 'React', 'TypeScript', 'Hotwire'],
   },
   {
-    title: 'Services',
+    title: 'Tools and services',
     items: ['PostgreSQL', 'Stripe', 'Cloudflare'],
   },
   {
-    title: 'Other',
-    items: ['Mentoring junior developers', 'Optimizing database queries', 'Writing documentation'],
+    title: 'Work practices',
+    items: ['Mentoring junior developers', 'Optimising database queries', 'Writing documentation'],
   },
 ] as const
 

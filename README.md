@@ -41,5 +41,6 @@ Deploy the `dist/` folder (Cloudflare Pages, Netlify, or any static host). `_hea
 
 ## Content
 
-- Projects: `src/data/projects.ts`
+- Projects: `src/data/projects.ts` (homepage shows `featured` + `showOnHome`; full list at `/projects`)
 - Skills / EmailJS: `src/data/site.ts`
+- New project screenshots: drop a source into `src/assets/images/`, add it to `scripts/optimize-images.mjs`, run `npm run optimize-images`, then set `image` / `imageWidth` / `imageHeight` / `alt` on the project. Omit `image` to use the default placeholder.

@@ -1,6 +1,8 @@
 ---
-import { projects } from '../data/projects'
+import { getHomepageProjects } from '../data/projects'
 import ProjectCard from './ProjectCard.astro'
+
+const homeProjects = getHomepageProjects()
 ---
 
 <section class="section" id="projects">
@@ -8,12 +10,15 @@ import ProjectCard from './ProjectCard.astro'
     <div class="section-intro">
       <h2 class="section-title">Projects</h2>
       <p class="section-lead">
-        A few things I’ve shipped. The static site creator and the Zwift workout editor are the
-        larger ones.
+        A selection of my projects, including my newest, Who Funds NZ. The full list is on the
+        projects page.
       </p>
     </div>
     <ul class="project__list">
-      {projects.map((project) => <ProjectCard project={project} />)}
+      {homeProjects.map((project) => <ProjectCard project={project} />)}
     </ul>
+    <p class="projects-more">
+      <a class="projects-more__link" href="/projects">View all projects</a>
+    </p>
   </div>
 </section>

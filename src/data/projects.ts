@@ -3,22 +3,64 @@ export type Project = {
   description: string
   live_url: string
   github_repo: string
-  /** Basename under /assets/images/{name}-{width}.{avif,webp} */
+  /** Basename under /assets/images/{name}-{width}.{avif,webp}. Omit to use the placeholder. */
+  image?: string
+  imageWidth?: number
+  imageHeight?: number
+  /** object-position for the cropped screenshot */
+  imagePosition?: string
+  alt?: string
+  skills: readonly string[]
+  featured?: boolean
+  /** Shown on the homepage project strip (featured projects always are). */
+  showOnHome?: boolean
+}
+
+export const DEFAULT_PROJECT_IMAGE = {
+  image: 'project-placeholder',
+  imageWidth: 1200,
+  imageHeight: 675,
+} as const
+
+export type ResolvedProjectImage = {
   image: string
   imageWidth: number
   imageHeight: number
-  /** object-position for the cropped screenshot */
-  imagePosition?: string
   alt: string
-  skills: readonly string[]
-  featured?: boolean
+  imagePosition?: string
+}
+
+export function resolveProjectImage(project: Project): ResolvedProjectImage {
+  if (project.image) {
+    return {
+      image: project.image,
+      imageWidth: project.imageWidth ?? DEFAULT_PROJECT_IMAGE.imageWidth,
+      imageHeight: project.imageHeight ?? DEFAULT_PROJECT_IMAGE.imageHeight,
+      alt: project.alt ?? `${project.title} screenshot`,
+      imagePosition: project.imagePosition,
+    }
+  }
+
+  return {
+    image: DEFAULT_PROJECT_IMAGE.image,
+    imageWidth: DEFAULT_PROJECT_IMAGE.imageWidth,
+    imageHeight: DEFAULT_PROJECT_IMAGE.imageHeight,
+    alt: project.alt ?? `${project.title} — screenshot coming soon`,
+  }
+}
+
+/** Featured first, then other homepage picks, preserving data-file order within each group. */
+export function getHomepageProjects(all: readonly Project[] = projects): Project[] {
+  const featured = all.filter((project) => project.featured)
+  const rest = all.filter((project) => !project.featured && project.showOnHome)
+  return [...featured, ...rest]
 }
 
 export const projects: Project[] = [
   {
     title: 'Static site creator',
     description:
-      'Rails app to create and host static sites. Edit the files in the browser, publish under /s/:name, and the assets live on Cloudflare R2.',
+      'A Rails app for creating and hosting static sites, with an editor in the browser for changing the files.',
     live_url: 'https://static-site-creator.fly.dev',
     github_repo: 'https://github.com/MaysenTG/ror-gcs-site-creator',
     image: 'static-site-generator',
@@ -31,20 +73,67 @@ export const projects: Project[] = [
   {
     title: 'ZWO Builder',
     description:
-      'A Zwift workout editor I built because clicking intervals together in-game is slow. Drag blocks around, describe a change in plain English, export a .zwo. Workouts stay in the browser, in IndexedDB.',
+      'A Zwift workout editor where you drag blocks to build intervals or describe changes in plain English, then export the workout as a .zwo file.',
     live_url: 'https://zwo-builder.pages.dev/',
     github_repo: 'https://github.com/MaysenTG/zwift-workout-creator',
     image: 'zwift-workout-builder',
     imageWidth: 1919,
     imageHeight: 875,
-    alt: 'ZWO Builder editing a sweet spot workout, with the power profile in the center',
+    alt: 'ZWO Builder editing a sweet spot workout, with the power profile in the centre',
     skills: ['React', 'TypeScript', 'Cloudflare', 'OpenAI'],
     featured: true,
   },
   {
+    title: 'Who Funds NZ',
+    description:
+      'An unofficial explorer of large donations to New Zealand political parties. Filter by party, year, amount, and donor type, then export the results as CSV.',
+    live_url: 'https://whofunds.nz',
+    github_repo: 'https://github.com/MaysenTG/nz-party-donations-explorer',
+    image: 'whofunds',
+    imageWidth: 1024,
+    imageHeight: 564,
+    alt: 'Who Funds NZ showing amount-by-party bars, with National, ACT, Conservative and Labour leading the filtered totals',
+    skills: ['React', 'TypeScript', 'Vite', 'Recharts'],
+    showOnHome: true,
+  },
+  {
+    title: 'CronClock',
+    description:
+      'Paste a cron expression to see what it means and when it next runs, in as many time zones as you need.',
+    live_url: 'https://cronclock.pages.dev',
+    github_repo: 'https://github.com/MaysenTG/cronclock',
+    image: 'cronclock',
+    imageWidth: 1024,
+    imageHeight: 571,
+    alt: 'CronClock explaining 0 9 20 * * as 9:00 AM on day 20 of every month, with Auckland and UTC next runs',
+    skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    showOnHome: true,
+  },
+  {
+    title: 'PasteTable',
+    description:
+      'Turn pasted JSON, CSV, TSV, or psql output into a table that you can sort, filter, copy, or share as a link.',
+    live_url: 'https://pastetable.pages.dev',
+    github_repo: 'https://github.com/MaysenTG/pastetable',
+    image: 'pastetable',
+    imageWidth: 1024,
+    imageHeight: 556,
+    alt: 'PasteTable with JSON of people on the left and a sortable name, location and title table below',
+    skills: ['TypeScript', 'Vite', 'Cloudflare'],
+    showOnHome: true,
+  },
+  {
+    title: 'curlcard',
+    description:
+      'Paste a curl command to get a readable breakdown of each part. This project is still in progress.',
+    live_url: '',
+    github_repo: 'https://github.com/MaysenTG/curlcard',
+    skills: ['TypeScript'],
+  },
+  {
     title: 'Markdown website builder',
     description:
-      'Frontend pages from markdown, YAML frontmatter, and a bit of CSS, compressed into the URL. Share a link and the page renders — no accounts, no backend. The editor shows a live preview, and optional AI edits for an element or the whole page go through a Cloudflare Worker so the OpenAI key never reaches the browser.',
+      'Write a page in Markdown and share it as a link. The editor shows a live preview, and optional AI edits can change one element or the whole page.',
     live_url: 'https://markdown-website-builder.pages.dev/',
     github_repo: 'https://github.com/MaysenTG/markdown-website-builder',
     image: 'markdown-website-builder',
@@ -56,7 +145,7 @@ export const projects: Project[] = [
   {
     title: 'URL shortener',
     description:
-      'Rails redirect service with webhook-backed click counts. The interesting bit was keeping the hop itself cheap.',
+      'A Rails app that turns long URLs into short links and counts the clicks on each one.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/url_shortener',
     image: 'url-shortener',
@@ -68,7 +157,7 @@ export const projects: Project[] = [
   {
     title: 'Link in bio',
     description:
-      'Link in bio app with an editable bio page. The app uses Hotwire/StimulusJS to update the bio page in real time. Links are orderable to prioritize the most important links. Images live on Cloudflare R2.',
+      'A Rails app for a link-in-bio page, where you add and reorder links and see the page update in real time.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/RoR-link_in_bio',
     image: 'linkinbio',
@@ -80,7 +169,7 @@ export const projects: Project[] = [
   {
     title: 'This site',
     description:
-      'Personal site in Astro with a cache-first service worker. The project list is a JS file on purpose — adding something new should not involve a CMS.',
+      'My personal site, built with Astro and very little JavaScript.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/personal-portfolio',
     image: 'personal-portfolio',
@@ -92,7 +181,7 @@ export const projects: Project[] = [
   {
     title: 'Fake API',
     description:
-      'Sinatra app that stands up REST endpoints for testing. OpenAI fills in the responses, then they get cached so you are not paying for the same fake payload twice.',
+      'A Sinatra app that creates REST endpoints for testing, with response data written by OpenAI.',
     live_url: '',
     github_repo: 'https://github.com/MaysenTG/fake-api',
     image: 'fake-api',
@@ -104,7 +193,7 @@ export const projects: Project[] = [
   {
     title: 'Planedle',
     description:
-      'A daily guess-the-aircraft game. You see a zoomed-in photo of a plane and each wrong guess zooms out, over six tries. Photos load from Wikimedia Commons.',
+      'A daily guess-the-aircraft game where each wrong guess shows more of the photo, and you have six tries to get it.',
     live_url: 'https://maysentg.github.io/planedle/',
     github_repo: 'https://github.com/MaysenTG/planedle',
     image: 'planedle',
