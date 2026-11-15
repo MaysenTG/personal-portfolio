@@ -12,6 +12,29 @@ export default defineConfig({
     build: {
       cssMinify: true,
       assetsInlineLimit: 4096,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                name: 'fly-three',
+                test: /node_modules[\\/]three[\\/]/,
+                priority: 30,
+              },
+              {
+                name: 'fly-scene',
+                test: (id) =>
+                  /[\\/]src[\\/]fly[\\/]/.test(id) &&
+                  !/[\\/]shell\.ts/.test(id) &&
+                  !/[\\/]content\.ts/.test(id) &&
+                  !/[\\/]island-ids\.ts/.test(id) &&
+                  !id.includes('.test.ts'),
+                priority: 20,
+              },
+            ],
+          },
+        },
+      },
     },
   },
   integrations: [
@@ -39,7 +62,7 @@ export default defineConfig({
       workbox: {
         navigateFallback: '/index.html',
         globPatterns: ['**/*.{js,css,html,ico,svg,woff,woff2,json,webmanifest}'],
-        globIgnores: ['**/assets/images/**'],
+        globIgnores: ['**/assets/images/**', '**/fly-three*', '**/fly-scene*'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         clientsClaim: true,
@@ -54,6 +77,20 @@ export default defineConfig({
               expiration: {
                 maxEntries: 64,
                 maxAgeSeconds: 60 * 60 * 24,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.includes('fly-three') || url.pathname.includes('fly-scene'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fly-3d',
+              expiration: {
+                maxEntries: 8,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
               cacheableResponse: {
                 statuses: [0, 200],

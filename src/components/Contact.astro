@@ -1,5 +1,5 @@
 ---
-import { emailJs, profile } from '../data/site'
+import { contactIntro, emailJs, profile } from '../data/site'
 ---
 
 <section class="section" id="contact-me">
@@ -7,9 +7,7 @@ import { emailJs, profile } from '../data/site'
     <div class="contact__grid">
       <div>
         <h2 class="section-title">Contact</h2>
-        <p class="section-lead">
-          Email me about a role, a project, or a ride, or send a message with the form.
-        </p>
+        <p class="section-lead">{contactIntro}</p>
         <p class="contact__info">
           <a class="contact__email" href={`mailto:${profile.email}`}>{profile.email}</a>
         </p>

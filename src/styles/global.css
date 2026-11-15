@@ -332,6 +332,22 @@ img {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  align-items: center;
+}
+
+.hero__fly {
+  align-self: center;
+  width: fit-content;
+  color: rgba(244, 239, 232, 0.86);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  padding: 0.35rem 0.15rem;
+}
+
+.hero__fly:hover {
+  color: #fff;
 }
 
 /* Buttons */
@@ -1176,6 +1192,10 @@ textarea.form-control {
 
   .hero__actions .btn {
     width: 100%;
+  }
+
+  .hero__actions .hero__fly {
+    align-self: flex-start;
   }
 }
 
