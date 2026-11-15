@@ -60,32 +60,15 @@ function sampleLanding(flight: FlightState, island: IslandDef, verticalSpeed: nu
 }
 
 export function startFlight(api: FlyController): () => void {
-  let cancelled = false
-  let stopSession: (() => void) | null = null
-
-  void createWorld(api.host)
-    .then((world) => {
-      if (cancelled) {
-        world.dispose()
-        return
-      }
-      stopSession = runSession(api, world)
-    })
-    .catch((error) => {
-      console.error(error)
-      if (!cancelled) {
-        api.showMap('The flight view did not load. The map still opens each section.')
-      }
-    })
-
-  return () => {
-    cancelled = true
-    stopSession?.()
-    stopSession = null
+  let world: ReturnType<typeof createWorld>
+  try {
+    world = createWorld(api.host)
+  } catch (error) {
+    console.error(error)
+    api.showMap('The flight view did not load. The map still opens each section.')
+    return () => {}
   }
-}
 
-function runSession(api: FlyController, world: Awaited<ReturnType<typeof createWorld>>): () => void {
   const input = createInput(document, {
     keysAllowed: () => api.keysAllowed(),
     collectiveAllowed: () => api.collectiveAllowed(),
