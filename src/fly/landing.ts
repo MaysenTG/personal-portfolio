@@ -1,9 +1,9 @@
 export const LANDING = {
-  maxHorizontalSpeed: 4.5,
-  maxVerticalSpeed: 2.2,
-  /** Radians. About 12 degrees. */
-  maxTilt: 0.22,
-  maxHeightAbovePad: 1.15,
+  maxHorizontalSpeed: 5.5,
+  maxVerticalSpeed: 2.8,
+  /** Cosmetics can lean a bit while settling; keep this loose. */
+  maxTilt: 0.32,
+  maxHeightAbovePad: 1.35,
   minHeightAbovePad: -0.2,
 } as const
 

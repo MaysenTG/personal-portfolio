@@ -1,4 +1,5 @@
 import {
+  AmbientLight,
   BoxGeometry,
   CanvasTexture,
   CircleGeometry,
@@ -14,6 +15,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshPhongMaterial,
   PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
@@ -122,17 +124,18 @@ function makeLabelTexture(text: string): CanvasTexture {
 
 function makeSkyTexture(): CanvasTexture {
   const canvas = document.createElement('canvas')
-  canvas.width = 4
+  canvas.width = 8
   canvas.height = 512
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas unavailable')
   const gradient = context.createLinearGradient(0, 0, 0, 512)
-  gradient.addColorStop(0, '#2d6cb8')
-  gradient.addColorStop(0.42, '#7eb4da')
-  gradient.addColorStop(0.7, '#c5e2f0')
-  gradient.addColorStop(1, '#d5eaf3')
+  gradient.addColorStop(0, '#1a4f9c')
+  gradient.addColorStop(0.28, '#4d8fd0')
+  gradient.addColorStop(0.55, '#9ec9ea')
+  gradient.addColorStop(0.78, '#d7ebf4')
+  gradient.addColorStop(1, '#f0e6d2')
   context.fillStyle = gradient
-  context.fillRect(0, 0, 4, 512)
+  context.fillRect(0, 0, 8, 512)
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
   return texture
@@ -144,21 +147,27 @@ function makeWaterTexture(): CanvasTexture {
   canvas.height = 256
   const context = canvas.getContext('2d')
   if (!context) throw new Error('Canvas unavailable')
-  context.fillStyle = '#13607a'
+  const base = context.createLinearGradient(0, 0, 256, 256)
+  base.addColorStop(0, '#0d6a7c')
+  base.addColorStop(0.45, '#148198')
+  base.addColorStop(1, '#0a5570')
+  context.fillStyle = base
   context.fillRect(0, 0, 256, 256)
-  for (let band = 0; band < 8; band++) {
-    context.fillStyle = band % 2 === 0 ? 'rgba(190, 230, 236, 0.18)' : 'rgba(8, 50, 70, 0.18)'
-    context.fillRect(0, band * 32, 256, 16)
+  for (let band = 0; band < 14; band++) {
+    context.fillStyle = band % 2 === 0 ? 'rgba(210, 245, 250, 0.16)' : 'rgba(6, 40, 58, 0.14)'
+    context.beginPath()
+    context.ellipse(128, band * 22, 180, 10, 0, 0, Math.PI * 2)
+    context.fill()
   }
-  context.fillStyle = 'rgba(255, 255, 255, 0.45)'
-  for (let i = 0; i < 36; i++) {
-    context.fillRect((i * 53) % 256, (i * 97) % 256, 2, 2)
+  context.fillStyle = 'rgba(255, 255, 255, 0.35)'
+  for (let i = 0; i < 70; i++) {
+    context.fillRect((i * 47) % 256, (i * 89) % 256, 2, 2)
   }
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
   texture.wrapS = RepeatWrapping
   texture.wrapT = RepeatWrapping
-  texture.repeat.set(40, 40)
+  texture.repeat.set(28, 28)
   return texture
 }
 
@@ -175,36 +184,66 @@ export function createWorld(host: HTMLElement): World {
     powerPreference: 'high-performance',
     failIfMajorPerformanceCaveat: false,
   })
-  renderer.setClearColor(0xb7d6e6, 1)
+  renderer.setClearColor(0x9ec9ea, 1)
   renderer.outputColorSpace = SRGBColorSpace
   host.append(canvas)
 
   const scene = new Scene()
-  scene.fog = new FogExp2(0xb7d6e6, 0.0068)
-  scene.background = new Color(0xb7d6e6)
+  scene.fog = new FogExp2(0xc5dde8, 0.0054)
+  scene.background = new Color(0x9ec9ea)
 
-  const camera = new PerspectiveCamera(58, 1, 0.1, 1800)
+  const camera = new PerspectiveCamera(55, 1, 0.1, 1800)
   camera.position.set(0, 16, 22)
 
-  scene.add(new HemisphereLight(0xd6ecff, 0x6d8a52, 1.2))
-  const sun = new DirectionalLight(0xfff2d8, 1.4)
-  sun.position.set(70, 110, 36)
+  scene.add(new AmbientLight(0xffffff, 0.28))
+  scene.add(new HemisphereLight(0xe8f4ff, 0x6e9458, 0.95))
+  const sun = new DirectionalLight(0xfff1d2, 1.55)
+  sun.position.set(80, 120, 40)
   scene.add(sun)
+  const fill = new DirectionalLight(0x9eb8ff, 0.35)
+  fill.position.set(-50, 40, -60)
+  scene.add(fill)
 
   const sky = new Mesh(
-    new SphereGeometry(760, 20, 12),
+    new SphereGeometry(760, 24, 14),
     new MeshBasicMaterial({ map: makeSkyTexture(), side: DoubleSide, fog: false, depthWrite: false }),
   )
   scene.add(sky)
 
-  const waterTexture = makeWaterTexture()
-  const water = new Mesh(
-    new PlaneGeometry(1700, 1700),
-    new MeshLambertMaterial({ map: waterTexture }),
+  const sunDisc = new Mesh(
+    new SphereGeometry(18, 12, 10),
+    new MeshBasicMaterial({ color: 0xffe7a8, fog: false }),
   )
+  sunDisc.position.set(220, 160, -180)
+  scene.add(sunDisc)
+
+  const waterTexture = makeWaterTexture()
+  const waterMaterial = new MeshPhongMaterial({
+    map: waterTexture,
+    color: 0xffffff,
+    shininess: 90,
+    specular: 0x88c8d8,
+    transparent: true,
+    opacity: 0.94,
+  })
+  const water = new Mesh(new PlaneGeometry(1700, 1700, 1, 1), waterMaterial)
   water.rotation.x = -Math.PI / 2
   water.position.y = 0.02
   scene.add(water)
+  const waterSheen = new Mesh(
+    new PlaneGeometry(1700, 1700),
+    new MeshPhongMaterial({
+      color: 0x7ec8d8,
+      transparent: true,
+      opacity: 0.12,
+      shininess: 120,
+      specular: 0xffffff,
+      depthWrite: false,
+    }),
+  )
+  waterSheen.rotation.x = -Math.PI / 2
+  waterSheen.position.y = 0.08
+  scene.add(waterSheen)
 
   const materials = new Map<number, MeshLambertMaterial>()
   const skyMap = sky.material.map
@@ -287,6 +326,7 @@ export function createWorld(host: HTMLElement): World {
 
   const desired = new Vector3()
   const look = new Vector3()
+  const lookCurrent = new Vector3()
   let framed = false
 
   function resize() {
@@ -307,10 +347,10 @@ export function createWorld(host: HTMLElement): World {
     helicopter.group.rotation.y = -flight.yaw
     helicopter.group.rotation.x = -flight.pitch
     helicopter.group.rotation.z = -flight.roll
-    const spinning = frame.mode === 'fly' ? 34 : 10
+    const spinning = frame.mode === 'fly' ? 38 : 11
     helicopter.rotor.rotation.y += frame.dt * spinning
-    helicopter.tailRotor.rotation.z += frame.dt * (spinning + 14)
-    helicopter.disc.material.opacity = frame.mode === 'fly' ? 0.22 : 0.06
+    helicopter.tailRotor.rotation.z += frame.dt * (spinning + 16)
+    helicopter.disc.material.opacity = frame.mode === 'fly' ? 0.28 : 0.07
 
     const walking = frame.mode === 'walk'
     character.group.visible = walking
@@ -319,34 +359,46 @@ export function createWorld(host: HTMLElement): World {
     character.group.rotation.y = -frame.walkYaw
     character.applyWalk(frame.walkPhase, frame.walkAmount)
 
-    const anchorY = walking ? frame.groundY + 1.2 : flight.y + 1.3
+    const anchorY = walking ? frame.groundY + 1.25 : flight.y + 1.15
     const anchorX = walking ? frame.walk.x : flight.x
     const anchorZ = walking ? frame.walk.z : flight.z
     const yaw = walking ? frame.walkYaw : flight.yaw
     const forwardX = Math.sin(yaw)
     const forwardZ = -Math.cos(yaw)
-    const back = walking ? 6.4 : 11.5
-    const up = walking ? 2.7 : 4.4
+    const speed = walking ? frame.walkAmount * 7 : Math.hypot(flight.vx, flight.vz)
+    const back = walking ? 5.8 : 9.8 + Math.min(speed, 24) * 0.08
+    const up = walking ? 2.45 : 3.6 + Math.min(speed, 24) * 0.02
     desired.set(anchorX - forwardX * back, Math.max(1.7, anchorY + up), anchorZ - forwardZ * back)
     look.set(
-      anchorX + forwardX * (walking ? 1.5 : 6),
-      anchorY,
-      anchorZ + forwardZ * (walking ? 1.5 : 6),
+      anchorX + forwardX * (walking ? 2.2 : 8 + Math.min(speed, 20) * 0.15),
+      anchorY + (walking ? 0.2 : -0.15),
+      anchorZ + forwardZ * (walking ? 2.2 : 8 + Math.min(speed, 20) * 0.15),
     )
-    const blend = framed ? 1 - Math.exp(-3.6 * Math.max(frame.dt, 0.001)) : 1
-    framed = true
-    camera.position.lerp(desired, blend)
-    camera.lookAt(look)
+    // Snap harder while turning so the camera feels locked to heading.
+    const turning = !walking && Math.abs(flight.yawRate) > 0.12
+    const followRate = turning ? 11 : 6
+    const blend = framed ? 1 - Math.exp(-followRate * Math.max(frame.dt, 0.001)) : 1
+    if (!framed) {
+      camera.position.copy(desired)
+      lookCurrent.copy(look)
+      framed = true
+    } else {
+      camera.position.lerp(desired, blend)
+      lookCurrent.lerp(look, blend)
+    }
+    camera.lookAt(lookCurrent)
 
     const floorY = walking ? frame.groundY : flight.y
     const altitude = walking ? 0.2 : flight.y - frame.groundY
-    blob.visible = altitude < 12
+    blob.visible = altitude < 14
     blob.position.set(anchorX, (walking ? frame.groundY : floorY) + 0.05, anchorZ)
-    const spread = 1 + Math.min(altitude, 12) * 0.12
+    const spread = 1 + Math.min(altitude, 14) * 0.12
     blob.scale.setScalar(spread)
-    blobMaterial.opacity = 0.3 * (1 - Math.min(altitude, 12) / 12)
+    blobMaterial.opacity = 0.32 * (1 - Math.min(altitude, 14) / 14)
 
-    waterTexture.offset.y = (waterTexture.offset.y + frame.dt * 0.015) % 1
+    waterTexture.offset.x = (waterTexture.offset.x + frame.dt * 0.01) % 1
+    waterTexture.offset.y = (waterTexture.offset.y + frame.dt * 0.018) % 1
+    waterSheen.position.y = 0.08 + Math.sin(frame.time * 0.7) * 0.02
     for (const beacon of beacons) {
       const pulse = 1 + Math.sin(frame.time * 3.2 + beacon.position.x) * 0.12
       beacon.scale.setScalar(pulse)
@@ -368,6 +420,8 @@ export function createWorld(host: HTMLElement): World {
     })
     for (const material of materials.values()) material.dispose()
     blobMaterial.dispose()
+    waterMaterial.dispose()
+    waterSheen.material.dispose()
     helicopter.disc.material.dispose()
     helicopter.glass.dispose()
     for (const texture of textures) texture.dispose()
@@ -418,14 +472,16 @@ function buildHelicopter(
   // Nose shelf under the bubble
   box(group, 0.72, 0.18, 0.42, 0, 0.62, -0.72, WHITE)
 
-  const glass = new MeshLambertMaterial({
+  const glass = new MeshPhongMaterial({
     color: GLASS,
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.48,
+    shininess: 140,
+    specular: 0xd8f0ff,
     depthWrite: false,
   })
   // Bubble canopy (the Cabri glasshouse)
-  const canopy = new Mesh(new SphereGeometry(0.72, 10, 8), glass)
+  const canopy = new Mesh(new SphereGeometry(0.72, 12, 10), glass)
   canopy.scale.set(0.92, 0.82, 1.12)
   canopy.position.set(0, 1.05, -0.18)
   group.add(canopy)
@@ -623,18 +679,30 @@ function buildIsland(
 ) {
   const group = new Group()
   group.position.set(island.x, 0, island.z)
+  const shelf = new Mesh(
+    new CylinderGeometry(island.radius * 1.18, island.radius * 1.32, 0.7, 10),
+    lambert(0x1f6d78),
+  )
+  shelf.position.y = 0.1
+  group.add(shelf)
   const beach = new Mesh(
-    new CylinderGeometry(island.radius * 1.04, island.radius * 1.16, 1.15, 8),
+    new CylinderGeometry(island.radius * 1.02, island.radius * 1.14, 1.35, 10),
     lambert(SAND),
   )
-  beach.position.y = 0.42
+  beach.position.y = 0.55
   group.add(beach)
   const grass = new Mesh(
-    new CylinderGeometry(island.radius * 0.9, island.radius * 0.98, island.surfaceY, 7),
+    new CylinderGeometry(island.radius * 0.88, island.radius * 0.98, island.surfaceY, 9),
     lambert(island.grass),
   )
   grass.position.y = island.surfaceY / 2
   group.add(grass)
+  const rise = new Mesh(
+    new CylinderGeometry(island.radius * 0.42, island.radius * 0.58, 0.85, 7),
+    lambert(island.grass + 0x0a1808),
+  )
+  rise.position.set(-island.radius * 0.12, island.surfaceY + 0.35, island.radius * 0.08)
+  group.add(rise)
 
   const padX = island.padX - island.x
   const padZ = island.padZ - island.z

@@ -7,11 +7,13 @@ import { stepWalk, type WalkState } from './walk'
 import type { FlyController } from './types'
 
 const HINT = {
-  flyKeys: 'W S tilt, A D lean, Q E turn, Space up, Shift down.',
-  walkKeys: 'W A S D walk, left and right arrows look, E read, F take off.',
-  flyTouch: 'Left stick tilts. Right stick turns and climbs.',
-  walkTouch: 'Left stick walks. Right stick looks.',
+  flyKeys: 'W S move, A D turn the camera, Space up, Shift down.',
+  walkKeys: 'W S walk, A D turn, E read, F take off.',
+  flyTouch: 'Left stick moves and turns. Right stick climbs.',
+  walkTouch: 'Left stick walks. Right stick turns.',
 } as const
+
+const MOUSE_TURN = 0.0048
 
 const LAND_HOLD = 0.28
 const TAKEOFF_RANGE = 4.8
@@ -158,7 +160,13 @@ export function startFlight(api: FlyController): () => void {
 
     if (!api.isPaused()) {
       if (mode === 'fly') {
-        flight = containFlight(stepFlight(flight, input.flight(), dt))
+        const stick = input.flight()
+        // Mouse drag turns the same way the camera faces.
+        const steered = {
+          ...stick,
+          turn: Math.max(-1, Math.min(1, stick.turn + stick.mouse * MOUSE_TURN * 18)),
+        }
+        flight = containFlight(stepFlight(flight, steered, dt))
         const floor = flightFloor(flight.x, flight.z)
         const applied = applyFloor(flight, floor)
         flight = applied.state
@@ -188,13 +196,16 @@ export function startFlight(api: FlyController): () => void {
         const wish = input.walk(walkYaw)
         walkYaw += wish.look * 1.7 * dt
         walkYaw -= wish.mouse * 0.0045
-        walk = stepWalk(
-          walk,
-          { x: wish.x, z: wish.z },
-          dt,
-          island,
-          world.obstacles.get(island.id) ?? [],
-        )
+        walk = {
+          ...stepWalk(
+            walk,
+            { x: wish.x, z: wish.z },
+            dt,
+            island,
+            world.obstacles.get(island.id) ?? [],
+          ),
+          yaw: walkYaw,
+        }
         const wishLen = Math.hypot(wish.x, wish.z)
         const targetAmount = wishLen > 0.12 ? Math.min(1, wishLen) : 0
         walkAmount += (targetAmount - walkAmount) * Math.min(1, dt * 10)

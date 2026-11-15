@@ -17,39 +17,49 @@ function settle(state: ReturnType<typeof createFlightState>, input: typeof NEUTR
 }
 
 describe('stepFlight', () => {
-  it('hovers when the collective is neutral', () => {
+  it('hovers when thrust is neutral', () => {
     const next = settle(createFlightState({ y: 10 }), NEUTRAL_PILOT, 2)
     expect(next.y).toBeCloseTo(10, 5)
     expect(next.vy).toBe(0)
   })
 
-  it('climbs with positive collective and descends with negative', () => {
-    const up = settle(createFlightState({ y: 10 }), { ...NEUTRAL_PILOT, collective: 1 }, 1)
-    const down = settle(createFlightState({ y: 10 }), { ...NEUTRAL_PILOT, collective: -1 }, 1)
+  it('climbs and descends with climb input', () => {
+    const up = settle(createFlightState({ y: 10 }), { ...NEUTRAL_PILOT, climb: 1 }, 1)
+    const down = settle(createFlightState({ y: 10 }), { ...NEUTRAL_PILOT, climb: -1 }, 1)
     expect(up.y).toBeGreaterThan(12)
     expect(down.y).toBeLessThan(8)
   })
 
-  it('tilts forward and accelerates along -Z, then levels when the stick is released', () => {
-    const tilted = settle(createFlightState(), { ...NEUTRAL_PILOT, cyclicPitch: 1 }, 1.2)
-    expect(tilted.pitch).toBeGreaterThan(0.25)
-    expect(tilted.pitch).toBeLessThanOrEqual(FLIGHT.maxTilt + 1e-6)
-    expect(tilted.z).toBeLessThan(-1)
-    expect(tilted.vz).toBeLessThan(0)
-
-    const level = settle(tilted, NEUTRAL_PILOT, 2)
-    expect(Math.abs(level.pitch)).toBeLessThan(0.02)
+  it('flies forward along facing and leans the nose for juice', () => {
+    const next = settle(createFlightState({ yaw: 0 }), { ...NEUTRAL_PILOT, forward: 1 }, 1)
+    expect(next.z).toBeLessThan(-5)
+    expect(next.vz).toBeLessThan(0)
+    expect(next.pitch).toBeGreaterThan(0.1)
+    expect(next.pitch).toBeLessThanOrEqual(FLIGHT.maxPitch + 1e-6)
   })
 
-  it('banks right and accelerates along +X', () => {
-    const next = settle(createFlightState(), { ...NEUTRAL_PILOT, cyclicRoll: 1 }, 1)
-    expect(next.roll).toBeGreaterThan(0.2)
-    expect(next.x).toBeGreaterThan(1)
+  it('turns right and banks, aiming the nose the way the camera should face', () => {
+    const next = settle(createFlightState(), { ...NEUTRAL_PILOT, turn: 1 }, 0.8)
+    expect(next.yaw).toBeGreaterThan(0.8)
+    expect(next.roll).toBeLessThan(-0.1)
   })
 
-  it('yaws to the right with pedal input', () => {
-    const next = settle(createFlightState(), { ...NEUTRAL_PILOT, yaw: 1 }, 0.8)
-    expect(next.yaw).toBeGreaterThan(0.2)
+  it('moves along a new heading after turning', () => {
+    let state = createFlightState()
+    state = settle(state, { ...NEUTRAL_PILOT, turn: 1 }, 0.7)
+    const afterTurn = state.yaw
+    state = settle(state, { ...NEUTRAL_PILOT, forward: 1 }, 0.8)
+    const facingX = Math.sin(afterTurn)
+    const facingZ = -Math.cos(afterTurn)
+    const along = state.vx * facingX + state.vz * facingZ
+    expect(along).toBeGreaterThan(5)
+  })
+
+  it('levels out when you stop thrusting and turning', () => {
+    const moving = settle(createFlightState(), { ...NEUTRAL_PILOT, forward: 1, turn: 1 }, 1)
+    const level = settle(moving, NEUTRAL_PILOT, 1.5)
+    expect(Math.abs(level.pitch)).toBeLessThan(0.05)
+    expect(Math.abs(level.roll)).toBeLessThan(0.05)
   })
 })
 

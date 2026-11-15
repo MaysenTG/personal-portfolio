@@ -1,9 +1,10 @@
 import type { PilotInput } from './flight'
 
 export type WalkWish = {
+  /** World-space wish, already rotated by facing. */
   x: number
   z: number
-  /** -1..1 camera turn rate from keys and the right stick. */
+  /** -1..1 turn rate. Turning aims the camera. */
   look: number
   /** Pixel delta from dragging on the view. */
   mouse: number
@@ -26,7 +27,7 @@ const GAME_KEYS = new Set([
   'ArrowRight',
 ])
 
-const DEADZONE = 0.16
+const DEADZONE = 0.14
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
@@ -90,7 +91,7 @@ function bindStick(element: HTMLElement | null): Stick {
 }
 
 export type InputController = {
-  flight: () => PilotInput
+  flight: () => PilotInput & { mouse: number }
   walk: (yaw: number) => WalkWish
   consumeInteract: () => boolean
   consumeTakeoff: () => boolean
@@ -98,6 +99,10 @@ export type InputController = {
   attachView: (view: HTMLElement, allowLook: () => boolean) => void
 }
 
+/**
+ * Tank-style arcade controls: turn aims the camera, thrust moves that way.
+ * Left stick / WASD drive. Right stick climbs and can also turn on touch.
+ */
 export function createInput(root: ParentNode, options: {
   keysAllowed: () => boolean
   collectiveAllowed: () => boolean
@@ -139,44 +144,51 @@ export function createInput(root: ParentNode, options: {
     return hit
   }
 
+  function keyAxis(positive: string[], negative: string[]): number {
+    const up = positive.some((code) => held.has(code)) ? 1 : 0
+    const down = negative.some((code) => held.has(code)) ? 1 : 0
+    return up - down
+  }
+
   return {
     usingTouch: () => touch,
     flight: () => {
-      const keyCollective =
+      const keyForward = keyAxis(['KeyW', 'ArrowUp'], ['KeyS', 'ArrowDown'])
+      const keyTurn = keyAxis(
+        ['KeyD', 'ArrowRight', 'KeyE'],
+        ['KeyA', 'ArrowLeft', 'KeyQ'],
+      )
+      const keyClimb =
         (held.has('Space') && options.collectiveAllowed() ? 1 : 0) -
         (held.has('ShiftLeft') || held.has('ShiftRight') ? 1 : 0)
-      const keyYaw =
-        (held.has('KeyE') || held.has('ArrowRight') ? 1 : 0) -
-        (held.has('KeyQ') || held.has('ArrowLeft') ? 1 : 0)
-      const keyPitch =
-        (held.has('KeyW') || held.has('ArrowUp') ? 1 : 0) -
-        (held.has('KeyS') || held.has('ArrowDown') ? 1 : 0)
-      const keyRoll = (held.has('KeyD') ? 1 : 0) - (held.has('KeyA') ? 1 : 0)
+
+      const stickForward = stickAxis(left.y)
+      const stickTurn = stickAxis(left.x) + stickAxis(right.x) * 0.85
+      const stickClimb = stickAxis(right.y)
+
+      const mouse = lookPixels
+      lookPixels = 0
+
       return {
-        collective: clamp(keyCollective !== 0 ? keyCollective : stickAxis(right.y), -1, 1),
-        yaw: clamp(keyYaw !== 0 ? keyYaw : stickAxis(right.x), -1, 1),
-        cyclicPitch: clamp(keyPitch !== 0 ? keyPitch : stickAxis(left.y), -1, 1),
-        cyclicRoll: clamp(keyRoll !== 0 ? keyRoll : stickAxis(left.x), -1, 1),
+        forward: clamp(keyForward !== 0 ? keyForward : stickForward, -1, 1),
+        turn: clamp(keyTurn !== 0 ? keyTurn : stickTurn, -1, 1),
+        climb: clamp(keyClimb !== 0 ? keyClimb : stickClimb, -1, 1),
+        mouse,
       }
     },
     walk: (yaw: number) => {
-      const forward =
-        (held.has('KeyW') || held.has('ArrowUp') ? 1 : 0) -
-        (held.has('KeyS') || held.has('ArrowDown') ? 1 : 0)
-      const strafe = (held.has('KeyD') ? 1 : 0) - (held.has('KeyA') ? 1 : 0)
-      const moveForward = clamp(forward !== 0 ? forward : stickAxis(left.y), -1, 1)
-      const moveStrafe = clamp(strafe !== 0 ? strafe : stickAxis(left.x), -1, 1)
+      const keyForward = keyAxis(['KeyW', 'ArrowUp'], ['KeyS', 'ArrowDown'])
+      const keyTurn = keyAxis(['KeyD', 'ArrowRight'], ['KeyA', 'ArrowLeft'])
+      const moveForward = clamp(keyForward !== 0 ? keyForward : stickAxis(left.y), -1, 1)
+      const look = clamp(keyTurn !== 0 ? keyTurn : stickAxis(right.x) + stickAxis(left.x) * 0.35, -1, 1)
       const fx = Math.sin(yaw)
       const fz = -Math.cos(yaw)
-      const rx = Math.cos(yaw)
-      const rz = Math.sin(yaw)
-      const arrowLook = (held.has('ArrowRight') ? 1 : 0) - (held.has('ArrowLeft') ? 1 : 0)
       const mouse = lookPixels
       lookPixels = 0
       return {
-        x: fx * moveForward + rx * moveStrafe,
-        z: fz * moveForward + rz * moveStrafe,
-        look: clamp(arrowLook !== 0 ? arrowLook : stickAxis(right.x), -1, 1),
+        x: fx * moveForward,
+        z: fz * moveForward,
+        look,
         mouse,
       }
     },

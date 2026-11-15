@@ -51,7 +51,7 @@ A playable low-poly helicopter prototype on its own route. Fly between islands, 
 
 - **Stack:** plain [three.js](https://threejs.org/) with a small arcade flight model (no React Three Fiber / Rapier). Keeps the download smaller and avoids pulling React onto a mostly static Astro site.
 - **Isolation:** the 3D code is only loaded from `/fly/`. Homepage and `/projects/` stay free of three.js. CI runs `scripts/check-fly-isolation.mjs` after the build to prove that.
-- **Controls:** keyboard on desktop, on-screen sticks on touch. Esc closes panels. Prefer reduced motion? You get a static island map instead.
+- **Controls:** arcade tank-style flying (turn aims the camera, thrust moves that way). Keyboard on desktop, on-screen sticks on touch. Esc closes panels. Prefer reduced motion? You get a static island map instead.
 - **Assets:** everything is built from primitives (no third-party models). The helicopter is a low-poly Guimbal Cabri G2 silhouette.
 - **Tests:** `npm test` covers landing checks, content mapping, flight step logic, and the walk cycle.
 
