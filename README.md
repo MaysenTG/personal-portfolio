@@ -42,5 +42,21 @@ Deploy the `dist/` folder (Cloudflare Pages, Netlify, or any static host). `_hea
 ## Content
 
 - Projects: `src/data/projects.ts` (homepage shows `featured` + `showOnHome`; full list at `/projects`)
-- Skills / EmailJS: `src/data/site.ts`
+- Skills / EmailJS / About copy: `src/data/site.ts`
 - New project screenshots: drop a source into `src/assets/images/`, add it to `scripts/optimize-images.mjs`, run `npm run optimize-images`, then set `image` / `imageWidth` / `imageHeight` / `alt` on the project. Omit `image` to use the default placeholder.
+
+## Island explorer (`/fly/`)
+
+A playable low-poly helicopter prototype on its own route. Fly between islands, land on a helipad, walk up to a sign, and open the same About / Skills / Projects / Contact content the main site uses (no duplicated copy).
+
+- **Stack:** plain [three.js](https://threejs.org/) with a small arcade flight model (no React Three Fiber / Rapier). Keeps the download smaller and avoids pulling React onto a mostly static Astro site.
+- **Isolation:** the 3D code is only loaded from `/fly/`. Homepage and `/projects/` stay free of three.js. CI runs `scripts/check-fly-isolation.mjs` after the build to prove that.
+- **Controls:** arcade tank-style flying (turn aims the camera, thrust moves that way). Keyboard on desktop, on-screen sticks on touch. Esc closes panels. Prefer reduced motion? You get a static island map instead.
+- **Assets:** everything is built from primitives (no third-party models, no pixel art). The helicopter is a low-poly Guimbal Cabri G2 silhouette.
+- **Tests:** `npm test` covers landing checks, content mapping, flight step logic, and the walk cycle.
+
+```bash
+npm test
+npm run build
+node scripts/check-fly-isolation.mjs
+```

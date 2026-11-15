@@ -1,3 +1,18 @@
+/** Copy shared by the About section and the island explorer. */
+export const aboutCopy = {
+  statement: 'Outside of work, I’m a triathlete and a helicopter pilot.',
+  body: 'At Henry Schein One, I work on Dentally, where I lead large projects, improve the developer experience, and mentor junior developers.',
+  facts: [
+    { label: 'Role', value: 'Intermediate Developer, Henry Schein One' },
+    { label: 'Main tools', value: 'Ruby on Rails, Ember, ASP.NET' },
+    { label: 'Outside work', value: 'Triathlon, helicopters' },
+  ],
+} as const
+
+/** Lead sentence shared by the contact section and the island explorer. */
+export const contactIntro =
+  'Email me about a role, a project, or a ride, or send a message with the form.'
+
 export const profile = {
   name: 'Maysen Greenwood',
   email: 'greenwood.maysen@gmail.com',

@@ -1,27 +1,25 @@
+---
+import { aboutCopy } from '../data/site'
+---
+
 <section class="section section--light" id="about">
   <div class="container">
     <h2 class="section-title">About</h2>
     <div class="about">
-      <p class="about__statement">Outside of work, I’m a triathlete and a helicopter pilot.</p>
+      <p class="about__statement">{aboutCopy.statement}</p>
       <div class="about__copy">
-        <p class="about__text">
-          At Henry Schein One, I work on Dentally, where I lead large projects, improve the developer experience, and mentor junior developers.
-        </p>
+        <p class="about__text">{aboutCopy.body}</p>
       </div>
     </div>
     <dl class="about__facts">
-      <div>
-        <dt>Role</dt>
-        <dd>Intermediate Developer, Henry Schein One</dd>
-      </div>
-      <div>
-        <dt>Main tools</dt>
-        <dd>Ruby on Rails, Ember, ASP.NET</dd>
-      </div>
-      <div>
-        <dt>Outside work</dt>
-        <dd>Triathlon, helicopters</dd>
-      </div>
+      {
+        aboutCopy.facts.map((fact) => (
+          <div>
+            <dt>{fact.label}</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))
+      }
     </dl>
   </div>
 </section>

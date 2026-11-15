@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { profile } from '../../data/site'
+import { listIslandContent } from '../../fly/content'
+import '../../styles/fly.css'
+
+const islands = listIslandContent()
+const title = 'Island explorer | Maysen Greenwood'
+const description =
+  'Fly a small helicopter between islands, then walk up to a sign to read projects, about, skills, and contact.'
+const pathname = '/fly'
+const site = Astro.site ?? new URL('https://maysengreenwood.com')
+const pageUrl = new URL('/fly/', site).href
+const homeUrl = new URL('/', site).href
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Island explorer',
+  description,
+  url: pageUrl,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: profile.name,
+    url: homeUrl,
+  },
+}
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  pathname={pathname}
+  jsonLd={jsonLd}
+  showSkip={false}
+>
+  <main id="main" class="fly" tabindex="-1">
+    <h1 class="visually-hidden">Island explorer</h1>
+    <div class="fly-top">
+      <a class="fly-skip" href="/">Skip to site</a>
+      <nav class="fly-nav" aria-label="Sections">
+        {
+          islands.map((island) => (
+            <button type="button" data-open={island.id}>
+              {island.title}
+            </button>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div id="fly-view" class="fly-view" hidden></div>
+
+    <div id="fly-map" class="fly-map">
+      <p id="fly-map-note" class="fly-map__note">Pick an island to read that section.</p>
+      <div class="fly-map__sea">
+        {
+          islands.map((island) => (
+            <button type="button" class={`fly-isle fly-isle--${island.id}`} data-open={island.id}>
+              {island.title}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div id="fly-hud" class="fly-hud" hidden>
+      <p id="fly-status" class="fly-status" role="status"></p>
+      <p id="fly-readout" class="fly-readout"></p>
+      <ul id="fly-checks" class="fly-checks" hidden>
+        <li data-check="level">Level</li>
+        <li data-check="slow">Slow</li>
+        <li data-check="low">Low</li>
+      </ul>
+      <p id="fly-prompt" class="fly-prompt" role="status" hidden></p>
+      <p id="fly-hint" class="fly-hint"></p>
+    </div>
+
+    <div id="fly-touch" class="fly-touch" hidden>
+      <div id="fly-stick-left" class="fly-stick" aria-hidden="true">
+        <div class="fly-stick__knob"></div>
+      </div>
+      <div class="fly-touch__actions">
+        <button type="button" id="fly-read" hidden>Read</button>
+        <button type="button" id="fly-takeoff" hidden>Take off</button>
+      </div>
+      <div id="fly-stick-right" class="fly-stick" aria-hidden="true">
+        <div class="fly-stick__knob"></div>
+      </div>
+    </div>
+
+    <div
+      id="fly-dialog"
+      class="fly-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="panel-projects-title"
+      hidden
+    >
+      <div class="fly-dialog__card">
+        <div class="fly-dialog__bar">
+          <p class="fly-dialog__esc">Esc closes this panel.</p>
+          <button type="button" id="fly-close">Close</button>
+        </div>
+        <div class="fly-dialog__body">
+          {
+            islands.map((island) => (
+              <section id={`panel-${island.id}`} data-panel={island.id} hidden>
+                {island.id === 'projects' && (
+                  <>
+                    <h2 id={`panel-${island.id}-title`} tabindex="-1">
+                      {island.title}
+                    </h2>
+                    <p class="fly-more">
+                      <a href="/projects">View all projects</a>
+                    </p>
+                    <ul class="fly-projects">
+                      {island.projects.map((project) => (
+                        <li class="fly-project">
+                          <h3>{project.title}</h3>
+                          <ul class="fly-tags">
+                            {project.skills.map((skill) => (
+                              <li>{skill}</li>
+                            ))}
+                          </ul>
+                          <p>{project.description}</p>
+                          <p class="fly-project__links">
+                            {project.github_repo && (
+                              <a href={project.github_repo} target="_blank" rel="noopener noreferrer">
+                                GitHub
+                                <span class="visually-hidden">: {project.title}</span>
+                              </a>
+                            )}
+                            {project.live_url && (
+                              <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                                Live
+                                <span class="visually-hidden"> site: {project.title}</span>
+                              </a>
+                            )}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {island.id === 'about' && (
+                  <>
+                    <h2 id={`panel-${island.id}-title`} tabindex="-1">
+                      {island.title}
+                    </h2>
+                    <p class="fly-lead">{island.statement}</p>
+                    <p>{island.body}</p>
+                    <dl class="fly-facts">
+                      {island.facts.map((fact) => (
+                        <div>
+                          <dt>{fact.label}</dt>
+                          <dd>{fact.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </>
+                )}
+                {island.id === 'skills' && (
+                  <>
+                    <h2 id={`panel-${island.id}-title`} tabindex="-1">
+                      {island.title}
+                    </h2>
+                    <div class="fly-skills">
+                      {island.groups.map((group) => (
+                        <section>
+                          <h3>{group.title}</h3>
+                          <ul>
+                            {group.items.map((item) => (
+                              <li>{item}</li>
+                            ))}
+                          </ul>
+                        </section>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {island.id === 'contact' && (
+                  <>
+                    <h2 id={`panel-${island.id}-title`} tabindex="-1">
+                      {island.title}
+                    </h2>
+                    <p class="fly-lead">{island.intro}</p>
+                    <p>
+                      <a class="contact__email" href={`mailto:${island.email}`}>
+                        {island.email}
+                      </a>
+                    </p>
+                    <ul class="fly-contact-links">
+                      <li>
+                        <a href={island.github} target="_blank" rel="noopener noreferrer">
+                          GitHub
+                        </a>
+                      </li>
+                      <li>
+                        <a href={island.linkedin} target="_blank" rel="noopener noreferrer">
+                          LinkedIn
+                        </a>
+                      </li>
+                    </ul>
+                    <form id="fly-contact-form" novalidate>
+                      <div class="form-field">
+                        <label class="form-label" for="fly-name">Name</label>
+                        <input
+                          id="fly-name"
+                          class="form-control"
+                          name="user_name"
+                          type="text"
+                          autocomplete="name"
+                          required
+                        />
+                      </div>
+                      <div class="form-field">
+                        <label class="form-label" for="fly-email">Email</label>
+                        <input
+                          id="fly-email"
+                          class="form-control"
+                          name="email"
+                          type="email"
+                          autocomplete="email"
+                          inputmode="email"
+                          required
+                        />
+                      </div>
+                      <div class="form-field form-field--last">
+                        <label class="form-label" for="fly-message">Message</label>
+                        <textarea
+                          id="fly-message"
+                          class="form-control"
+                          name="message"
+                          rows="5"
+                          required
+                        />
+                      </div>
+                      <p id="fly-contact-error" class="contact__status contact__status--error" role="alert" hidden>
+                        Enter your name, email, and a message.
+                      </p>
+                      <button id="fly-contact-submit" class="btn btn-primary" type="submit">
+                        Send message
+                      </button>
+                    </form>
+                    <p id="fly-contact-success" class="contact__status" role="status" hidden>
+                      Your message is sent. I will reply soon.
+                    </p>
+                  </>
+                )}
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <noscript>
+      <div class="fly-noscript">
+        <p>JavaScript is off. The same sections are on the main site.</p>
+        <ul>
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#skills">Skills</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/#contact-me">Contact</a></li>
+        </ul>
+      </div>
+    </noscript>
+  </main>
+</BaseLayout>
+
+<script>
+  import { initFlyPage } from '../../fly/shell'
+  initFlyPage()
+</script>
